@@ -1,5 +1,5 @@
 import Testing
-@testable import OpenSnap
+@testable import OpenSnapCore
 
 struct SmartSnapControllerTests {
     @Test func repeatedSameSideCyclesThroughDefaultSteps() {

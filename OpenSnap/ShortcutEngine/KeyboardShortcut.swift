@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import OpenSnapCore
 
 /// A keyboard shortcut that maps to a window layout command.
 public struct KeyboardShortcut: Equatable, Sendable {
@@ -12,10 +13,4 @@ public struct KeyboardShortcut: Equatable, Sendable {
         self.modifiers = modifiers
         self.command = command
     }
-}
-
-/// Commands emitted by the shortcut layer.
-public enum ShortcutCommand: Equatable, Sendable {
-    case layout(LayoutCommand)
-    case smartSnap(SmartSnapSide)
 }

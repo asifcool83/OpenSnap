@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import OpenSnapCore
 
 /// Default keyboard shortcuts for OpenSnap.
 public enum DefaultShortcuts {

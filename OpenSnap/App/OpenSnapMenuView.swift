@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct OpenSnapMenuView: View {
+    @Environment(\.openWindow) private var openWindow
+
     @ObservedObject var model: OpenSnapAppModel
 
     var body: some View {
@@ -30,6 +32,14 @@ struct OpenSnapMenuView: View {
             Divider()
             Text(message)
         }
+
+        #if DEBUG
+        Divider()
+
+        Button("Developer Diagnostics") {
+            openWindow(id: "developer-diagnostics")
+        }
+        #endif
 
         Divider()
 
