@@ -7,7 +7,8 @@
 - Layout calculation foundation
 - Window Engine foundation
 - Developer Diagnostics
-- Design System V1
+- Design System v1
+- Repository governance
 
 ## v0.2.0-alpha
 

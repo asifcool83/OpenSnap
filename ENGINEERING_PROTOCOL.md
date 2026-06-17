@@ -1,14 +1,14 @@
 # Engineering Protocol
 
-OpenSnap is a long-term product and open-source project. Engineering decisions must support maintainability, native macOS quality, privacy, and contributor trust.
+OpenSnap is a long-term product and open-source project. Engineering decisions must support maintainability, native macOS quality, privacy, contributor trust, and product clarity.
 
 ## Roles
 
-- Project owner: makes final decisions.
+- Project owner: makes all final decisions.
 - ChatGPT: Product Architect, UX Designer, and Technical Reviewer.
 - Codex: Lead Software Engineer responsible for implementation quality.
 
-## Source of Truth
+## Source Of Truth
 
 GitHub is the permanent source of truth.
 
@@ -21,13 +21,13 @@ All milestone work should happen through:
 5. Product, UX, and technical review.
 6. Merge after approval.
 
-## Branching
+## Branches
 
-Use descriptive feature branches:
+Use descriptive branches:
 
 ```text
 feature/window-engine
-feature/design-system-v1
+feature/project-governance
 fix/accessibility-permission-copy
 docs/engineering-protocol
 ```
@@ -43,6 +43,7 @@ Every PR should include:
 - Summary
 - Testing performed
 - Architecture decisions
+- Design decisions when applicable
 - Technical debt
 - Future milestones or follow-up work
 
@@ -69,6 +70,24 @@ Before implementation, ask:
 - Does it improve reliability?
 - Does it avoid cleverness that future contributors will dislike?
 
+## Testing Expectations
+
+- Run the complete test suite before opening a PR.
+- Every layout algorithm should have unit tests.
+- Window calculations should be testable without launching the UI.
+- Manual QA should be documented for Accessibility and macOS integration behavior.
+
+## Documentation Expectations
+
+Update documentation when changing:
+
+- architecture
+- public behavior
+- design direction
+- contributor workflow
+- release process
+- major decisions
+
 ## Privacy Rules
 
 OpenSnap must not include:
@@ -77,9 +96,9 @@ OpenSnap must not include:
 - analytics
 - ads
 - accounts
-- cloud sync for core behavior
 - subscriptions
-- closed-source components
+- cloud sync for core behavior
+- closed-source product components
 
 ## Release Rules
 

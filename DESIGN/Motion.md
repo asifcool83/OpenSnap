@@ -14,6 +14,6 @@ Motion in OpenSnap should be short, purposeful, optional, and never distracting.
 
 Window movement should prioritize speed and precision. If animation is added later, it should be subtle and configurable.
 
-## Diagnostics and Settings
+## Diagnostics And Settings
 
 Diagnostics and settings should avoid decorative animation. State changes should be readable and calm.

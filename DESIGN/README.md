@@ -1,14 +1,37 @@
 # OpenSnap Design
 
-This directory contains the Version 1 OpenSnap Design System.
+![OpenSnap Brand v1 Reference](Source/logo-v1-reference.png)
 
-The current design language is anchored by the 60% / 40% split:
+This directory contains the OpenSnap Design System.
 
-- balance
-- focus
-- simplicity
-- native macOS experience
-- precision
-- instant understanding
+The image above is the **OpenSnap Brand v1 Reference**. It is not yet the final production logo, but it establishes the project's visual language.
 
-The attached Version 1 brand concept is the current reference point, not the final logo.
+The design language is anchored by the 60% / 40% split:
+
+- 60% Focus
+- 40% Context
+- Native macOS
+- Simplicity
+- Precision
+- Balance
+- Minimalism
+
+Future refinements should polish this identity, not replace it.
+
+## Asset Workflow
+
+Do not create placeholder source assets.
+
+Once the logo is finalized, the asset workflow will be:
+
+```text
+Master SVG
+  -> Exported PNG assets
+  -> App Icon
+  -> README
+  -> Website
+  -> Documentation
+  -> Marketing
+```
+
+The master SVG will become the single source of truth for every exported asset.

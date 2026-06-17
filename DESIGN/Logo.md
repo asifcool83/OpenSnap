@@ -1,10 +1,16 @@
 # Logo
 
+![OpenSnap Brand v1 Reference](Source/logo-v1-reference.png)
+
+This image is the **OpenSnap Brand v1 Reference**. It is the official visual direction for the project, not yet final production logo artwork.
+
+## Philosophy
+
 The OpenSnap mark is based on a 60% / 40% window split.
 
 The larger blue pane represents focus. The smaller dark pane represents context. Together they communicate the central product idea: arrange the workspace into a balanced shape that is immediately understandable.
 
-## Meaning
+## Why 60/40 Exists
 
 The 60/40 split reflects the original motivation for OpenSnap:
 
@@ -29,7 +35,7 @@ For square containers, the mark should generally occupy 70% to 78% of the availa
 
 ## Minimum Size
 
-The mark must remain recognizable at 16x16. At small sizes, preserve the two-pane relationship before preserving gradients or fine shadow details.
+The mark must remain recognizable at 16x16. At small sizes, preserve the two-pane relationship before preserving gradients or shadow details.
 
 ## Monochrome
 
@@ -55,4 +61,4 @@ The app icon may use a soft macOS-style rounded square container. The mark shoul
 
 ## Future Evolution
 
-The logo can evolve through refinement of radius, color, spacing, and optical balance. The 60/40 identity should remain stable unless the product direction changes.
+Future refinements should polish geometry, radius, color, spacing, and optical balance. They should not replace the 60/40 identity.

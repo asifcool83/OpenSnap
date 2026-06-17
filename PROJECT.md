@@ -8,6 +8,15 @@ OpenSnap helps users align, flow, and focus.
 
 It should be fast enough to disappear, clear enough to understand immediately, and trustworthy enough to run every day.
 
+## Product Direction
+
+- Native macOS look and feel
+- Minimal, elegant, and extremely fast
+- Simplicity over feature count
+- Reliability over cleverness
+- Privacy-first by default
+- Open source forever
+
 ## Non-Goals
 
 OpenSnap will not become:

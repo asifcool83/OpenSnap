@@ -4,7 +4,7 @@ OpenSnap uses a small, predictable spacing scale.
 
 | Token | Value | Use |
 | --- | ---: | --- |
-| `space-1` | 4 | Tight icon/text gaps, compact alignment |
+| `space-1` | 4 | Tight icon/text gaps |
 | `space-2` | 8 | Standard control gaps |
 | `space-3` | 12 | Small group padding |
 | `space-4` | 16 | Default panel padding |
