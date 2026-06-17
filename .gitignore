@@ -1,0 +1,5 @@
+.build/
+.clang-cache/
+.swiftpm/
+DerivedData/
+.DS_Store
