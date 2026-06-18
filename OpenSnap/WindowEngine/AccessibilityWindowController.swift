@@ -1,37 +1,32 @@
-import AppKit
-import ApplicationServices
 import Foundation
 import OpenSnapCore
 
-/// Controls the focused macOS window through the Accessibility API.
+/// Orchestrates focused-window operations through injected platform adapters.
 @MainActor
 public final class AccessibilityWindowController: WindowControlling {
-    private enum Attribute {
-        static let focusedWindow = "AXFocusedWindow"
-        static let mainWindow = "AXMainWindow"
-        static let position = "AXPosition"
-        static let size = "AXSize"
-        static let title = "AXTitle"
-        static let windowNumber = "AXWindowNumber"
-    }
-
     private struct FocusedWindowContext {
         let application: FrontmostApplication
-        let window: AXUIElement
+        let window: any AccessibilityWindowAccessing
     }
 
+    private let permissionProvider: AccessibilityPermissionProviding
     private let frontmostApplicationProvider: FrontmostApplicationProviding
+    private let focusedWindowProvider: FocusedWindowProviding
     private let screenFrameProvider: ScreenFrameProviding
     private let screenFrameResolver: ScreenFrameResolver
     private let layoutCalculator: LayoutCalculator
 
     public init(
+        permissionProvider: AccessibilityPermissionProviding = SystemAccessibilityPermissionProvider(),
         frontmostApplicationProvider: FrontmostApplicationProviding = AccessibilityFrontmostApplicationProvider(),
+        focusedWindowProvider: FocusedWindowProviding = AXFocusedWindowProvider(),
         screenFrameProvider: ScreenFrameProviding = AppKitScreenFrameProvider(),
         screenFrameResolver: ScreenFrameResolver = ScreenFrameResolver(),
         layoutCalculator: LayoutCalculator = LayoutCalculator()
     ) {
+        self.permissionProvider = permissionProvider
         self.frontmostApplicationProvider = frontmostApplicationProvider
+        self.focusedWindowProvider = focusedWindowProvider
         self.screenFrameProvider = screenFrameProvider
         self.screenFrameResolver = screenFrameResolver
         self.layoutCalculator = layoutCalculator
@@ -45,7 +40,7 @@ public final class AccessibilityWindowController: WindowControlling {
         try requireAccessibilityPermission()
 
         let context = try focusedWindowContext()
-        let windowFrame = try frame(for: context.window)
+        let windowFrame = try validatedFrame(for: context.window)
         try updateDiagnostics(application: context.application, window: context.window, windowFrame: windowFrame)
         return windowFrame
     }
@@ -58,8 +53,8 @@ public final class AccessibilityWindowController: WindowControlling {
         try requireAccessibilityPermission()
 
         let context = try focusedWindowContext()
-        try setPosition(origin, for: context.window)
-        let windowFrame = try frame(for: context.window)
+        try context.window.setPosition(origin)
+        let windowFrame = try validatedFrame(for: context.window)
         try updateDiagnostics(application: context.application, window: context.window, windowFrame: windowFrame)
     }
 
@@ -72,8 +67,8 @@ public final class AccessibilityWindowController: WindowControlling {
         try validate(size)
 
         let context = try focusedWindowContext()
-        try setSize(size, for: context.window)
-        let windowFrame = try frame(for: context.window)
+        try context.window.setSize(size)
+        let windowFrame = try validatedFrame(for: context.window)
         try updateDiagnostics(application: context.application, window: context.window, windowFrame: windowFrame)
     }
 
@@ -87,7 +82,7 @@ public final class AccessibilityWindowController: WindowControlling {
 
         let context = try focusedWindowContext()
         try setFrame(frame, for: context.window)
-        let windowFrame = try self.frame(for: context.window)
+        let windowFrame = try validatedFrame(for: context.window)
         try updateDiagnostics(application: context.application, window: context.window, windowFrame: windowFrame)
     }
 
@@ -102,7 +97,7 @@ public final class AccessibilityWindowController: WindowControlling {
 
         switch operation {
         case let .layout(command):
-            let currentFrame = try frame(for: context.window)
+            let currentFrame = try validatedFrame(for: context.window)
             let screenFrames = try screenFrameProvider.visibleScreenFrames()
 
             guard let screenFrame = screenFrameResolver.screenFrame(for: currentFrame, in: screenFrames) else {
@@ -121,7 +116,7 @@ public final class AccessibilityWindowController: WindowControlling {
     }
 
     private func requireAccessibilityPermission() throws {
-        guard AccessibilityPermission.isTrusted else {
+        guard permissionProvider.isTrusted else {
             #if DEBUG
             DeveloperDiagnosticsCenter.shared.update { snapshot in
                 snapshot.accessibilityPermissionStatus = "Missing"
@@ -140,7 +135,6 @@ public final class AccessibilityWindowController: WindowControlling {
 
     private func focusedWindowContext() throws -> FocusedWindowContext {
         let frontmostApplication = try frontmostApplicationProvider.frontmostApplication()
-        let application = AXUIElementCreateApplication(frontmostApplication.processIdentifier)
 
         #if DEBUG
         DeveloperDiagnosticsCenter.shared.record(
@@ -149,165 +143,28 @@ public final class AccessibilityWindowController: WindowControlling {
         )
         #endif
 
-        do {
-            return FocusedWindowContext(
-                application: frontmostApplication,
-                window: try windowAttribute(Attribute.focusedWindow, for: application)
-            )
-        } catch {
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.record(.warning, "Unable to obtain AXFocusedWindow")
-            #endif
-
-            return FocusedWindowContext(
-                application: frontmostApplication,
-                window: try windowAttribute(Attribute.mainWindow, for: application)
-            )
-        }
-    }
-
-    private func windowAttribute(_ attribute: String, for element: AXUIElement) throws -> AXUIElement {
-        let value = try copyAttribute(attribute, from: element)
-
-        guard CFGetTypeID(value) == AXUIElementGetTypeID() else {
-            throw WindowEngineError.focusedWindowUnavailable
-        }
-
-        return unsafeDowncast(value, to: AXUIElement.self)
-    }
-
-    private func frame(for window: AXUIElement) throws -> WindowFrame {
-        let position = try pointAttribute(Attribute.position, for: window)
-        let size = try sizeAttribute(Attribute.size, for: window)
-        let frame = WindowFrame(
-            x: position.x,
-            y: position.y,
-            width: size.width,
-            height: size.height
+        return FocusedWindowContext(
+            application: frontmostApplication,
+            window: try focusedWindowProvider.focusedWindow(for: frontmostApplication)
         )
+    }
 
+    private func validatedFrame(for window: any AccessibilityWindowAccessing) throws -> WindowFrame {
+        let frame = try window.frame()
         try validate(frame)
         return frame
     }
 
-    private func setFrame(_ frame: WindowFrame, for window: AXUIElement) throws {
+    private func setFrame(_ frame: WindowFrame, for window: any AccessibilityWindowAccessing) throws {
         try validate(frame)
-        try setSize(WindowSize(width: frame.width, height: frame.height), for: window)
-        try setPosition(WindowPoint(x: frame.x, y: frame.y), for: window)
-    }
-
-    private func setPosition(_ origin: WindowPoint, for window: AXUIElement) throws {
-        var point = CGPoint(x: origin.x, y: origin.y)
-
-        guard let value = AXValueCreate(.cgPoint, &point) else {
-            throw WindowEngineError.invalidAccessibilityValue
-        }
-
-        try setAttribute(Attribute.position, value: value, for: window)
-    }
-
-    private func setSize(_ size: WindowSize, for window: AXUIElement) throws {
-        try validate(size)
-
-        var cgSize = CGSize(width: size.width, height: size.height)
-
-        guard let value = AXValueCreate(.cgSize, &cgSize) else {
-            throw WindowEngineError.invalidAccessibilityValue
-        }
-
-        try setAttribute(Attribute.size, value: value, for: window)
-    }
-
-    private func pointAttribute(_ attribute: String, for element: AXUIElement) throws -> WindowPoint {
-        let value = try accessibilityValueAttribute(attribute, for: element)
-        var point = CGPoint.zero
-
-        guard AXValueGetValue(value, .cgPoint, &point) else {
-            throw WindowEngineError.invalidAccessibilityValue
-        }
-
-        return WindowPoint(x: point.x, y: point.y)
-    }
-
-    private func sizeAttribute(_ attribute: String, for element: AXUIElement) throws -> WindowSize {
-        let value = try accessibilityValueAttribute(attribute, for: element)
-        var size = CGSize.zero
-
-        guard AXValueGetValue(value, .cgSize, &size) else {
-            throw WindowEngineError.invalidAccessibilityValue
-        }
-
-        return WindowSize(width: size.width, height: size.height)
-    }
-
-    private func accessibilityValueAttribute(_ attribute: String, for element: AXUIElement) throws -> AXValue {
-        let value = try copyAttribute(attribute, from: element)
-
-        guard CFGetTypeID(value) == AXValueGetTypeID() else {
-            throw WindowEngineError.invalidAccessibilityValue
-        }
-
-        return unsafeDowncast(value, to: AXValue.self)
-    }
-
-    private func copyAttribute(_ attribute: String, from element: AXUIElement) throws -> CFTypeRef {
-        var value: CFTypeRef?
-        let result = AXUIElementCopyAttributeValue(element, attribute as CFString, &value)
-
-        guard result == .success, let value else {
-            throw WindowEngineError.accessibilityReadFailed(
-                attribute: attribute,
-                code: Int(result.rawValue)
-            )
-        }
-
-        return value
+        try window.setSize(WindowSize(width: frame.width, height: frame.height))
+        try window.setPosition(WindowPoint(x: frame.x, y: frame.y))
     }
 
     #if DEBUG
-    private func optionalAttribute(_ attribute: String, from element: AXUIElement) -> CFTypeRef? {
-        var value: CFTypeRef?
-        let result = AXUIElementCopyAttributeValue(element, attribute as CFString, &value)
-
-        guard result == .success else {
-            return nil
-        }
-
-        return value
-    }
-
-    private func optionalStringAttribute(_ attribute: String, from element: AXUIElement) -> String? {
-        guard let value = optionalAttribute(attribute, from: element),
-              CFGetTypeID(value) == CFStringGetTypeID() else {
-            return nil
-        }
-
-        return value as? String
-    }
-
-    private func optionalIntegerAttribute(_ attribute: String, from element: AXUIElement) -> Int? {
-        guard let value = optionalAttribute(attribute, from: element),
-              CFGetTypeID(value) == CFNumberGetTypeID() else {
-            return nil
-        }
-
-        return value as? Int
-    }
-
-    private func isAttributeSettable(_ attribute: String, for element: AXUIElement) -> String {
-        var settable = DarwinBoolean(false)
-        let result = AXUIElementIsAttributeSettable(element, attribute as CFString, &settable)
-
-        guard result == .success else {
-            return "Unknown"
-        }
-
-        return settable.boolValue ? "Yes" : "No"
-    }
-
     private func updateDiagnostics(
         application: FrontmostApplication,
-        window: AXUIElement,
+        window: any AccessibilityWindowAccessing,
         windowFrame: WindowFrame,
         visibleFrame providedVisibleFrame: WindowFrame? = nil
     ) throws {
@@ -319,12 +176,13 @@ public final class AccessibilityWindowController: WindowControlling {
         let screenIndex = visibleFrame.flatMap { selectedFrame in
             screenFrames.firstIndex(of: selectedFrame)
         }
+        let windowDiagnostics = window as? AccessibilityWindowDiagnosticsProviding
 
         DeveloperDiagnosticsCenter.shared.update { snapshot in
             snapshot.frontmostApplication = application.localizedName ?? "Unknown"
             snapshot.bundleIdentifier = application.bundleIdentifier ?? "Unavailable"
-            snapshot.windowTitle = optionalStringAttribute(Attribute.title, from: window) ?? "Unavailable"
-            snapshot.windowID = optionalIntegerAttribute(Attribute.windowNumber, from: window).map(String.init) ?? "Unavailable"
+            snapshot.windowTitle = windowDiagnostics?.windowTitle ?? "Unavailable"
+            snapshot.windowID = windowDiagnostics?.windowID.map(String.init) ?? "Unavailable"
             snapshot.windowFrame = DeveloperFormatting.frame(windowFrame)
             snapshot.visibleFrame = visibleFrame.map(DeveloperFormatting.frame) ?? "Unavailable"
             snapshot.screenBeingUsed = screenIndex.map { "Screen \($0 + 1)" } ?? "Unavailable"
@@ -332,29 +190,18 @@ public final class AccessibilityWindowController: WindowControlling {
                 DeveloperFormatting.size(width: $0.width, height: $0.height)
             } ?? "Unavailable"
             snapshot.accessibilityPermissionStatus = "Granted"
-            snapshot.isWindowMovable = isAttributeSettable(Attribute.position, for: window)
-            snapshot.isWindowResizable = isAttributeSettable(Attribute.size, for: window)
+            snapshot.isWindowMovable = windowDiagnostics?.isMovable ?? "Unknown"
+            snapshot.isWindowResizable = windowDiagnostics?.isResizable ?? "Unknown"
         }
     }
     #else
     private func updateDiagnostics(
         application: FrontmostApplication,
-        window: AXUIElement,
+        window: any AccessibilityWindowAccessing,
         windowFrame: WindowFrame,
         visibleFrame providedVisibleFrame: WindowFrame? = nil
     ) throws {}
     #endif
-
-    private func setAttribute(_ attribute: String, value: CFTypeRef, for element: AXUIElement) throws {
-        let result = AXUIElementSetAttributeValue(element, attribute as CFString, value)
-
-        guard result == .success else {
-            throw WindowEngineError.accessibilityWriteFailed(
-                attribute: attribute,
-                code: Int(result.rawValue)
-            )
-        }
-    }
 
     private func validate(_ frame: WindowFrame) throws {
         guard frame.x.isFinite,

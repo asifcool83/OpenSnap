@@ -26,7 +26,7 @@ let package = Package(
         ),
         .testTarget(
             name: "OpenSnapTests",
-            dependencies: ["OpenSnapCore"],
+            dependencies: ["OpenSnapCore", "OpenSnap"],
             path: "Tests"
         )
     ]
