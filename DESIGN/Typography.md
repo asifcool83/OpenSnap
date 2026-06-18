@@ -1,10 +1,10 @@
 # Typography
 
-OpenSnap should use the system font stack. Typography should feel like macOS, not a custom brand exercise.
+OpenSnap uses the system font stack. Typography should feel like macOS, not a custom brand exercise.
 
 ## Fonts
 
-- Primary: SF Pro via SwiftUI and AppKit system fonts
+- Primary: SF Pro through SwiftUI and AppKit system fonts
 - Monospaced: SF Mono for diagnostics, geometry, shortcuts, and logs
 
 ## Hierarchy
