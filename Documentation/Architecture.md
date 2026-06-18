@@ -28,6 +28,8 @@ The app window engine is responsible for frontmost-application detection, focuse
 
 Focused-window selection follows the deterministic policy in [Focused Window Acquisition](FocusedWindowAcquisition.md).
 
+Frame changes pass through the [Window Mutation Pipeline](WindowMutationPipeline.md), which applies and verifies a requested frame against the same acquired window.
+
 Monitor selection is platform-independent. `OpenSnapCore` chooses the screen with the largest overlap with the current window, falling back to the nearest screen when a stale window frame no longer intersects any display.
 
 ## LayoutEngine

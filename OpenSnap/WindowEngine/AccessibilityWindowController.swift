@@ -15,6 +15,7 @@ public final class AccessibilityWindowController: WindowControlling {
     private let screenFrameProvider: ScreenFrameProviding
     private let screenFrameResolver: ScreenFrameResolver
     private let layoutCalculator: LayoutCalculator
+    private let mutationPipeline = WindowMutationPipeline()
 
     public init(
         permissionProvider: AccessibilityPermissionProviding = SystemAccessibilityPermissionProvider(),
@@ -72,21 +73,34 @@ public final class AccessibilityWindowController: WindowControlling {
         try updateDiagnostics(application: context.application, window: context.window, windowFrame: windowFrame)
     }
 
-    public func setFocusedWindowFrame(_ frame: WindowFrame) throws {
+    @discardableResult
+    public func setFocusedWindowFrame(_ frame: WindowFrame) throws -> WindowMutationResult {
         #if DEBUG
         DeveloperDiagnosticsCenter.shared.recordOperation("Set Window Frame")
         #endif
 
         try requireAccessibilityPermission()
-        try validate(frame)
+
+        do {
+            try validate(frame)
+        } catch {
+            return .failure(
+                WindowMutationFailure(
+                    requestedFrame: frame,
+                    stage: .validation,
+                    reason: .invalidFrame
+                )
+            )
+        }
 
         let context = try focusedWindowContext()
-        try setFrame(frame, for: context.window)
-        let windowFrame = try validatedFrame(for: context.window)
-        try updateDiagnostics(application: context.application, window: context.window, windowFrame: windowFrame)
+        let result = mutationPipeline.apply(frame, to: context.window)
+        try? updateDiagnostics(for: result, context: context)
+        return result
     }
 
-    public func perform(_ operation: WindowOperation) throws {
+    @discardableResult
+    public func perform(_ operation: WindowOperation) throws -> WindowMutationResult {
         #if DEBUG
         DeveloperDiagnosticsCenter.shared.recordOperation("WindowEngine \(String(describing: operation))")
         #endif
@@ -105,13 +119,9 @@ public final class AccessibilityWindowController: WindowControlling {
             }
 
             let newFrame = layoutCalculator.frame(for: command, in: screenFrame)
-            try setFrame(newFrame, for: context.window)
-            try updateDiagnostics(
-                application: context.application,
-                window: context.window,
-                windowFrame: newFrame,
-                visibleFrame: screenFrame
-            )
+            let result = mutationPipeline.apply(newFrame, to: context.window)
+            try? updateDiagnostics(for: result, context: context, visibleFrame: screenFrame)
+            return result
         }
     }
 
@@ -155,10 +165,21 @@ public final class AccessibilityWindowController: WindowControlling {
         return frame
     }
 
-    private func setFrame(_ frame: WindowFrame, for window: any AccessibilityWindowAccessing) throws {
-        try validate(frame)
-        try window.setSize(WindowSize(width: frame.width, height: frame.height))
-        try window.setPosition(WindowPoint(x: frame.x, y: frame.y))
+    private func updateDiagnostics(
+        for result: WindowMutationResult,
+        context: FocusedWindowContext,
+        visibleFrame: WindowFrame? = nil
+    ) throws {
+        guard let observedFrame = result.observedFrame else {
+            return
+        }
+
+        try updateDiagnostics(
+            application: context.application,
+            window: context.window,
+            windowFrame: observedFrame,
+            visibleFrame: visibleFrame
+        )
     }
 
     #if DEBUG

@@ -97,7 +97,7 @@ struct AccessibilityWindowControllerTests {
         let controller = makeController(focusedWindowProvider: FocusedWindowProvider(window: window))
         let frame = WindowFrame(x: 120, y: 60, width: 840, height: 640)
 
-        try controller.setFocusedWindowFrame(frame)
+        let result = try controller.setFocusedWindowFrame(frame)
 
         #expect(
             window.calls == [
@@ -106,21 +106,86 @@ struct AccessibilityWindowControllerTests {
                 .readFrame
             ]
         )
+        #expect(
+            result == .success(
+                WindowMutationVerification(
+                    requestedFrame: frame,
+                    observedFrame: frame,
+                    tolerance: WindowMutationPipeline.defaultTolerance
+                )
+            )
+        )
     }
 
-    @Test func layoutOperationCalculatesAndAppliesFrameThroughAdapter() throws {
-        let window = WindowAdapter(frame: WindowFrame(x: 200, y: 100, width: 600, height: 500))
-        let controller = makeController(focusedWindowProvider: FocusedWindowProvider(window: window))
+    @Test func invalidFrameReturnsFailureBeforeTargetAcquisition() throws {
+        let focusedWindowProvider = FocusedWindowProvider(window: WindowAdapter())
+        let controller = makeController(focusedWindowProvider: focusedWindowProvider)
+        let invalidFrame = WindowFrame(x: 0, y: 0, width: 0, height: 700)
 
-        try controller.perform(.layout(.leftSixty))
+        let result = try controller.setFocusedWindowFrame(invalidFrame)
+
+        #expect(
+            result == .failure(
+                WindowMutationFailure(
+                    requestedFrame: invalidFrame,
+                    stage: .validation,
+                    reason: .invalidFrame
+                )
+            )
+        )
+        #expect(focusedWindowProvider.requestedApplications.isEmpty)
+    }
+
+    @Test func layoutOperationMutatesAndVerifiesOneAcquiredWindow() throws {
+        let window = WindowAdapter(frame: WindowFrame(x: 200, y: 100, width: 600, height: 500))
+        let focusedWindowProvider = FocusedWindowProvider(window: window)
+        let controller = makeController(focusedWindowProvider: focusedWindowProvider)
+
+        let result = try controller.perform(.layout(.leftSixty))
+        let requestedFrame = WindowFrame(x: 0, y: 25, width: 720, height: 775)
 
         #expect(
             window.calls == [
                 .readFrame,
                 .setSize(WindowSize(width: 720, height: 775)),
-                .setPosition(WindowPoint(x: 0, y: 25))
+                .setPosition(WindowPoint(x: 0, y: 25)),
+                .readFrame
             ]
         )
+        #expect(focusedWindowProvider.requestedApplications == [application])
+        #expect(
+            result == .success(
+                WindowMutationVerification(
+                    requestedFrame: requestedFrame,
+                    observedFrame: requestedFrame,
+                    tolerance: WindowMutationPipeline.defaultTolerance
+                )
+            )
+        )
+    }
+
+    @Test func layoutOperationReturnsConstrainedReadBackFromSameWindow() throws {
+        let constrainedFrame = WindowFrame(x: 0, y: 25, width: 680, height: 740)
+        let window = WindowAdapter(
+            frame: WindowFrame(x: 200, y: 100, width: 600, height: 500),
+            frameAfterMutation: constrainedFrame
+        )
+        let focusedWindowProvider = FocusedWindowProvider(window: window)
+        let controller = makeController(focusedWindowProvider: focusedWindowProvider)
+
+        let result = try controller.perform(.layout(.leftSixty))
+        let requestedFrame = WindowFrame(x: 0, y: 25, width: 720, height: 775)
+
+        #expect(
+            result == .constrained(
+                WindowMutationVerification(
+                    requestedFrame: requestedFrame,
+                    observedFrame: constrainedFrame,
+                    tolerance: WindowMutationPipeline.defaultTolerance
+                )
+            )
+        )
+        #expect(focusedWindowProvider.requestedApplications == [application])
     }
 
     private func makeController(
@@ -191,19 +256,26 @@ private final class WindowAdapter: AccessibilityWindowAccessing {
     }
 
     var currentFrame: WindowFrame
+    let frameAfterMutation: WindowFrame?
+    private var hasMutated = false
     private(set) var calls: [Call] = []
 
-    init(frame: WindowFrame = WindowFrame(x: 100, y: 80, width: 900, height: 700)) {
+    init(
+        frame: WindowFrame = WindowFrame(x: 100, y: 80, width: 900, height: 700),
+        frameAfterMutation: WindowFrame? = nil
+    ) {
         currentFrame = frame
+        self.frameAfterMutation = frameAfterMutation
     }
 
     func frame() throws -> WindowFrame {
         calls.append(.readFrame)
-        return currentFrame
+        return hasMutated ? frameAfterMutation ?? currentFrame : currentFrame
     }
 
     func setPosition(_ origin: WindowPoint) throws {
         calls.append(.setPosition(origin))
+        hasMutated = true
         currentFrame = WindowFrame(
             x: origin.x,
             y: origin.y,
@@ -214,6 +286,7 @@ private final class WindowAdapter: AccessibilityWindowAccessing {
 
     func setSize(_ size: WindowSize) throws {
         calls.append(.setSize(size))
+        hasMutated = true
         currentFrame = WindowFrame(
             x: currentFrame.x,
             y: currentFrame.y,

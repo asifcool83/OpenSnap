@@ -7,6 +7,8 @@ public protocol WindowControlling: AnyObject {
     func focusedWindowFrame() throws -> WindowFrame
     func moveFocusedWindow(to origin: WindowPoint) throws
     func resizeFocusedWindow(to size: WindowSize) throws
-    func setFocusedWindowFrame(_ frame: WindowFrame) throws
-    func perform(_ operation: WindowOperation) throws
+    @discardableResult
+    func setFocusedWindowFrame(_ frame: WindowFrame) throws -> WindowMutationResult
+    @discardableResult
+    func perform(_ operation: WindowOperation) throws -> WindowMutationResult
 }
