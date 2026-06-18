@@ -47,6 +47,25 @@ struct AccessibilityWindowControllerTests {
         #expect(window.calls == [.readFrame])
     }
 
+    @Test func focusedWindowAcquisitionFailurePropagatesWithoutWindowAccess() {
+        let expectedError = FocusedWindowAcquisitionError(
+            focusedWindowFailure: .missingValue,
+            mainWindowFailure: .invalidElement
+        )
+        let controller = makeController(
+            focusedWindowProvider: FocusedWindowProvider(error: expectedError)
+        )
+
+        do {
+            _ = try controller.focusedWindowFrame()
+            Issue.record("Expected focused-window acquisition to fail")
+        } catch let error as FocusedWindowAcquisitionError {
+            #expect(error == expectedError)
+        } catch {
+            Issue.record("Unexpected error: \(error)")
+        }
+    }
+
     @Test func movingWindowPreservesMutationThenReadOrder() throws {
         let window = WindowAdapter()
         let controller = makeController(focusedWindowProvider: FocusedWindowProvider(window: window))
@@ -145,16 +164,22 @@ private final class FrontmostApplicationProvider: FrontmostApplicationProviding 
 }
 
 private final class FocusedWindowProvider: FocusedWindowProviding {
-    let window: any AccessibilityWindowAccessing
+    let result: Result<any AccessibilityWindowAccessing, FocusedWindowAcquisitionError>
     private(set) var requestedApplications: [FrontmostApplication] = []
 
     init(window: any AccessibilityWindowAccessing) {
-        self.window = window
+        result = .success(window)
     }
 
-    func focusedWindow(for application: FrontmostApplication) throws -> any AccessibilityWindowAccessing {
+    init(error: FocusedWindowAcquisitionError) {
+        result = .failure(error)
+    }
+
+    func focusedWindow(
+        for application: FrontmostApplication
+    ) throws(FocusedWindowAcquisitionError) -> any AccessibilityWindowAccessing {
         requestedApplications.append(application)
-        return window
+        return try result.get()
     }
 }
 
