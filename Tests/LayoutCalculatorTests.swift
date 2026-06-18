@@ -1,5 +1,5 @@
 import Testing
-@testable import OpenSnap
+@testable import OpenSnapCore
 
 struct LayoutCalculatorTests {
     private let calculator = LayoutCalculator()

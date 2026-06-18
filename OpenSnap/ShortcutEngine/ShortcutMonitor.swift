@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import OpenSnapCore
 
 /// Monitors global key-down events and dispatches matching OpenSnap commands.
 @MainActor

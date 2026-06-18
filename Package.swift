@@ -8,11 +8,17 @@ let package = Package(
         .macOS(.v27)
     ],
     products: [
+        .library(name: "OpenSnapCore", targets: ["OpenSnapCore"]),
         .executable(name: "OpenSnap", targets: ["OpenSnap"])
     ],
     targets: [
+        .target(
+            name: "OpenSnapCore",
+            path: "OpenSnapCore"
+        ),
         .executableTarget(
             name: "OpenSnap",
+            dependencies: ["OpenSnapCore"],
             path: "OpenSnap",
             resources: [
                 .process("Resources")
@@ -20,7 +26,7 @@ let package = Package(
         ),
         .testTarget(
             name: "OpenSnapTests",
-            dependencies: ["OpenSnap"],
+            dependencies: ["OpenSnapCore"],
             path: "Tests"
         )
     ]

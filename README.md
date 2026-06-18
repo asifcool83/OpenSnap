@@ -54,17 +54,22 @@ OpenSnap targets macOS 27 or newer.
 ## Project Structure
 
 ```text
+OpenSnapCore/
+  LayoutEngine/
+  ShortcutEngine/
+  WindowEngine/
 OpenSnap/
   App/
   Accessibility/
-  WindowEngine/
-  LayoutEngine/
   ShortcutEngine/
+  WindowEngine/
   Settings/
   Utilities/
   Resources/
 Tests/
 Documentation/
 ```
+
+`OpenSnapCore` contains pure logic and app-independent models. `OpenSnap` contains SwiftUI, AppKit, Accessibility, and other macOS integration wiring.
 
 Each folder has a single responsibility, and layout algorithms are intentionally separated from AppKit so they can be tested without launching the UI.

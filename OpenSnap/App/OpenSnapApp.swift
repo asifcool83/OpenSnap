@@ -13,5 +13,15 @@ struct OpenSnapApp: App {
         Settings {
             SettingsView(settings: appModel.settings)
         }
+
+        #if DEBUG
+        Window("Developer Diagnostics", id: "developer-diagnostics") {
+            DeveloperDiagnosticsView(
+                diagnostics: .shared,
+                refresh: appModel.refreshDeveloperDiagnostics
+            )
+        }
+        .defaultSize(width: 820, height: 640)
+        #endif
     }
 }
