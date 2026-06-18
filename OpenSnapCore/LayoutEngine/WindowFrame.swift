@@ -2,10 +2,10 @@ import Foundation
 
 /// A platform-independent rectangle used by layout calculations.
 public struct WindowFrame: Equatable, Sendable {
-    public var x: Double
-    public var y: Double
-    public var width: Double
-    public var height: Double
+    public let x: Double
+    public let y: Double
+    public let width: Double
+    public let height: Double
 
     public init(x: Double, y: Double, width: Double, height: Double) {
         self.x = x
