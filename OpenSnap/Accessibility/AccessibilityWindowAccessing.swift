@@ -10,57 +10,7 @@ public protocol AccessibilityWindowAccessing: AnyObject {
     func setSize(_ size: WindowSize) throws
 }
 
-/// Acquires the focused window for an application.
-@MainActor
-public protocol FocusedWindowProviding {
-    func focusedWindow(for application: FrontmostApplication) throws -> any AccessibilityWindowAccessing
-}
-
-/// Acquires focused windows through macOS Accessibility.
-@MainActor
-public final class AXFocusedWindowProvider: FocusedWindowProviding {
-    public init() {}
-
-    public func focusedWindow(for application: FrontmostApplication) throws -> any AccessibilityWindowAccessing {
-        let applicationElement = AXUIElementCreateApplication(application.processIdentifier)
-
-        do {
-            return AXAccessibilityWindow(
-                element: try windowAttribute(AccessibilityAttribute.focusedWindow, from: applicationElement)
-            )
-        } catch {
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.record(.warning, "Unable to obtain AXFocusedWindow")
-            #endif
-
-            return AXAccessibilityWindow(
-                element: try windowAttribute(AccessibilityAttribute.mainWindow, from: applicationElement)
-            )
-        }
-    }
-
-    private func windowAttribute(_ attribute: String, from element: AXUIElement) throws -> AXUIElement {
-        var value: CFTypeRef?
-        let result = AXUIElementCopyAttributeValue(element, attribute as CFString, &value)
-
-        guard result == .success, let value else {
-            throw WindowEngineError.accessibilityReadFailed(
-                attribute: attribute,
-                code: Int(result.rawValue)
-            )
-        }
-
-        guard CFGetTypeID(value) == AXUIElementGetTypeID() else {
-            throw WindowEngineError.focusedWindowUnavailable
-        }
-
-        return unsafeDowncast(value, to: AXUIElement.self)
-    }
-}
-
 private enum AccessibilityAttribute {
-    static let focusedWindow = "AXFocusedWindow"
-    static let mainWindow = "AXMainWindow"
     static let position = "AXPosition"
     static let size = "AXSize"
     static let title = "AXTitle"
@@ -68,7 +18,7 @@ private enum AccessibilityAttribute {
 }
 
 @MainActor
-private final class AXAccessibilityWindow: AccessibilityWindowAccessing {
+final class AXAccessibilityWindow: AccessibilityWindowAccessing {
     private let element: AXUIElement
 
     init(element: AXUIElement) {

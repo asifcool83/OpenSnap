@@ -26,6 +26,8 @@ The app window engine is responsible for frontmost-application detection, focuse
 
 `AccessibilityWindowController` orchestrates these responsibilities through permission, application, focused-window, and screen providers. It preserves operation ordering and validation while leaving direct Accessibility API interaction to the concrete adapters.
 
+Focused-window selection follows the deterministic policy in [Focused Window Acquisition](FocusedWindowAcquisition.md).
+
 Monitor selection is platform-independent. `OpenSnapCore` chooses the screen with the largest overlap with the current window, falling back to the nearest screen when a stale window frame no longer intersects any display.
 
 ## LayoutEngine
