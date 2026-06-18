@@ -35,24 +35,28 @@ public struct LayoutCalculator: Sendable {
     }
 
     private func anchoredFrame(side: SmartSnapSide, ratio: Double, in screen: WindowFrame) -> WindowFrame {
-        let width = screen.width * ratio
-        let x = side == .left ? screen.x : screen.x + screen.width - width
+        let rawSplitX = side == .left
+            ? screen.minX + screen.width * ratio
+            : screen.maxX - screen.width * ratio
+        let minX = side == .left ? rounded(screen.minX) : rounded(rawSplitX)
+        let maxX = side == .left ? rounded(rawSplitX) : rounded(screen.maxX)
 
         return WindowFrame(
-            x: x.rounded(.toNearestOrAwayFromZero),
+            x: minX,
             y: screen.y,
-            width: width.rounded(.toNearestOrAwayFromZero),
+            width: maxX - minX,
             height: screen.height
         )
     }
 
     private func thirdFrame(index: Int, in screen: WindowFrame) -> WindowFrame {
-        let width = screen.width / 3.0
+        let minX = rounded(screen.minX + screen.width * Double(index) / 3.0)
+        let maxX = rounded(screen.minX + screen.width * Double(index + 1) / 3.0)
 
         return WindowFrame(
-            x: (screen.x + width * Double(index)).rounded(.toNearestOrAwayFromZero),
+            x: minX,
             y: screen.y,
-            width: width.rounded(.toNearestOrAwayFromZero),
+            width: maxX - minX,
             height: screen.height
         )
     }
@@ -60,12 +64,20 @@ public struct LayoutCalculator: Sendable {
     private func centeredFrame(in screen: WindowFrame) -> WindowFrame {
         let width = screen.width * Constants.centerWidthRatio
         let height = screen.height * Constants.centerHeightRatio
+        let minX = rounded(screen.minX + (screen.width - width) / 2.0)
+        let maxX = rounded(screen.minX + (screen.width + width) / 2.0)
+        let minY = rounded(screen.minY + (screen.height - height) / 2.0)
+        let maxY = rounded(screen.minY + (screen.height + height) / 2.0)
 
         return WindowFrame(
-            x: (screen.x + (screen.width - width) / 2.0).rounded(.toNearestOrAwayFromZero),
-            y: (screen.y + (screen.height - height) / 2.0).rounded(.toNearestOrAwayFromZero),
-            width: width.rounded(.toNearestOrAwayFromZero),
-            height: height.rounded(.toNearestOrAwayFromZero)
+            x: minX,
+            y: minY,
+            width: maxX - minX,
+            height: maxY - minY
         )
+    }
+
+    private func rounded(_ value: Double) -> Double {
+        value.rounded(.toNearestOrAwayFromZero)
     }
 }

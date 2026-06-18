@@ -49,7 +49,7 @@ swift build
 swift test
 ```
 
-OpenSnap targets macOS 27 or newer.
+OpenSnap targets macOS 15 (Sequoia) or newer.
 
 ## Project Structure
 

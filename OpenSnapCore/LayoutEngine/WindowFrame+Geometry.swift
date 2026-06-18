@@ -11,7 +11,7 @@ public extension WindowFrame {
     }
 
     func contains(_ point: WindowPoint) -> Bool {
-        point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY
+        point.x >= minX && point.x < maxX && point.y >= minY && point.y < maxY
     }
 
     func intersectionArea(with other: WindowFrame) -> Double {
@@ -24,8 +24,8 @@ public extension WindowFrame {
 
 /// A platform-independent point used by geometry calculations.
 public struct WindowPoint: Equatable, Sendable {
-    public var x: Double
-    public var y: Double
+    public let x: Double
+    public let y: Double
 
     public init(x: Double, y: Double) {
         self.x = x

@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "OpenSnap",
     platforms: [
-        .macOS(.v27)
+        .macOS(.v15)
     ],
     products: [
         .library(name: "OpenSnapCore", targets: ["OpenSnapCore"]),

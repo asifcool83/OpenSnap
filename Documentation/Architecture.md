@@ -24,6 +24,8 @@ The app window engine is responsible for frontmost-application detection, focuse
 
 Monitor selection is platform-independent. `OpenSnapCore` chooses the screen with the largest overlap with the current window, falling back to the nearest screen when a stale window frame no longer intersects any display.
 
+Core geometry is expressed in logical points within one shared global coordinate space. AppKit and Accessibility adapters are responsible for converting platform coordinates before creating Core models. See [Window Engine Contracts](WindowEngineContracts.md).
+
 ## LayoutEngine
 
 The layout engine is pure Swift. It accepts screen geometry and returns window geometry. This is where Smart Snap and all layout algorithms belong.
