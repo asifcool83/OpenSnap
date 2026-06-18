@@ -8,18 +8,23 @@ final class OpenSnapAppModel: ObservableObject {
     @Published private(set) var permissionGranted: Bool
     @Published var lastErrorMessage: String?
 
+    private let permissionProvider: AccessibilityPermissionProviding
     private let windowController: WindowControlling
     private var smartSnapController = SmartSnapController()
     private var shortcutMonitor: ShortcutMonitor?
 
-    init(windowController: WindowControlling = AccessibilityWindowController()) {
+    init(
+        permissionProvider: AccessibilityPermissionProviding = SystemAccessibilityPermissionProvider(),
+        windowController: WindowControlling = AccessibilityWindowController()
+    ) {
+        self.permissionProvider = permissionProvider
         self.windowController = windowController
-        permissionGranted = AccessibilityPermission.isTrusted
+        permissionGranted = permissionProvider.isTrusted
         startShortcuts()
     }
 
     func requestAccessibilityPermission() {
-        permissionGranted = AccessibilityPermission.requestIfNeeded()
+        permissionGranted = permissionProvider.requestIfNeeded()
         #if DEBUG
         DeveloperDiagnosticsCenter.shared.update { snapshot in
             snapshot.accessibilityPermissionStatus = permissionGranted ? "Granted" : "Missing"
