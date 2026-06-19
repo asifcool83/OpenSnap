@@ -38,7 +38,7 @@ final class OpenSnapInspector: ObservableObject {
                 severity: severity,
                 category: category,
                 message: message,
-                repeatCount: latest.repeatCount + 1
+                occurrenceCount: latest.occurrenceCount + 1
             )
             return
         }
@@ -176,7 +176,7 @@ struct InspectorEvent: Identifiable, Equatable, Codable {
     let severity: Severity
     let category: Category
     let message: String
-    let repeatCount: Int
+    let occurrenceCount: Int
 
     init(
         id: UUID = UUID(),
@@ -184,13 +184,13 @@ struct InspectorEvent: Identifiable, Equatable, Codable {
         severity: Severity,
         category: Category,
         message: String,
-        repeatCount: Int = 0
+        occurrenceCount: Int = 1
     ) {
         self.id = id
         self.timestamp = timestamp
         self.severity = severity
         self.category = category
         self.message = message
-        self.repeatCount = repeatCount
+        self.occurrenceCount = occurrenceCount
     }
 }

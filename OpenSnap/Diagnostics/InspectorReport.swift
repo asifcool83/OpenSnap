@@ -110,7 +110,7 @@ struct InspectorReport {
     private var logsText: String {
         guard !events.isEmpty else { return "No diagnostic events recorded." }
         return events.map {
-            let repetition = $0.repeatCount > 0 ? " — Repeated \($0.repeatCount) times" : ""
+            let repetition = $0.occurrenceCount > 1 ? " — Repeated \($0.occurrenceCount) times" : ""
             return "\(Self.dateString($0.timestamp)) [\($0.severity.rawValue)] [\($0.category.rawValue)] \($0.message)\(repetition)"
         }.joined(separator: "\n")
     }

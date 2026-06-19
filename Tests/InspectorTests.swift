@@ -38,7 +38,7 @@ struct InspectorTests {
         inspector.record(.warning, category: .accessibility, "Accessibility permission missing")
 
         #expect(inspector.events.count == 1)
-        #expect(inspector.events[0].repeatCount == 2)
+        #expect(inspector.events[0].occurrenceCount == 3)
     }
 
     @Test("Uses user-facing layout descriptions")
