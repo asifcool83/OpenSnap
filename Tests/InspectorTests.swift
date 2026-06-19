@@ -54,4 +54,31 @@ struct InspectorTests {
         #expect(version.contains("abc123"))
         #expect(version.contains("42"))
     }
+
+    @Test("Exported ZIP contains all support files")
+    func exportedZipContents() throws {
+        let report = InspectorReport(
+            buildInfo: buildInfo,
+            snapshot: InspectorSnapshot(appVersion: "1.2.3", buildNumber: "42"),
+            events: []
+        )
+        let destination = FileManager.default.temporaryDirectory
+            .appendingPathComponent("OpenSnap-InspectorTests-\(UUID().uuidString).zip")
+        defer { try? FileManager.default.removeItem(at: destination) }
+
+        try InspectorReportExporter.export(report, to: destination)
+
+        let process = Process()
+        let output = Pipe()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/unzip")
+        process.arguments = ["-Z1", destination.path]
+        process.standardOutput = output
+        try process.run()
+        process.waitUntilExit()
+
+        #expect(process.terminationStatus == 0)
+        let listing = String(decoding: output.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+        let files = Set(listing.split(separator: "\n").map(String.init))
+        #expect(files == ["report.json", "logs.txt", "system.json", "version.json"])
+    }
 }
