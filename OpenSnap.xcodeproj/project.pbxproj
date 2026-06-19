@@ -32,6 +32,8 @@
 		A00000000000000000000018 /* OpenSnapCore in Frameworks */ = {isa = PBXBuildFile; productRef = E00000000000000000000001 /* OpenSnapCore */; };
 		A00000000000000000000019 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* BuildInfo.swift */; };
 		A0000000000000000000001A /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001B /* AboutView.swift */; };
+		A0000000000000000000001B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = E00000000000000000000003 /* Sparkle */; };
+		A0000000000000000000001C /* OpenSnapUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001C /* OpenSnapUpdater.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,10 +64,11 @@
 		B00000000000000000000019 /* OpenSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0000000000000000000001A /* BuildInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/BuildInfo.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000001B /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/AboutView.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000001C /* OpenSnapUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapUpdater.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C00000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000018 /* OpenSnapCore in Frameworks */,); runOnlyForDeploymentPostprocessing = 0; };
+		C00000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000018 /* OpenSnapCore in Frameworks */, A0000000000000000000001B /* Sparkle in Frameworks */,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -75,11 +78,11 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D00000000000000000000001 /* OpenSnap */ = {isa = PBXNativeTarget; buildConfigurationList = D00000000000000000000002 /* Build configuration list for PBXNativeTarget "OpenSnap" */; buildPhases = (D00000000000000000000003 /* Sources */, C00000000000000000000001 /* Frameworks */, D00000000000000000000004 /* Resources */,); buildRules = (); dependencies = (); name = OpenSnap; packageProductDependencies = (E00000000000000000000001 /* OpenSnapCore */,); productName = OpenSnap; productReference = B00000000000000000000019 /* OpenSnap.app */; productType = "com.apple.product-type.application"; };
+		D00000000000000000000001 /* OpenSnap */ = {isa = PBXNativeTarget; buildConfigurationList = D00000000000000000000002 /* Build configuration list for PBXNativeTarget "OpenSnap" */; buildPhases = (D00000000000000000000003 /* Sources */, C00000000000000000000001 /* Frameworks */, D00000000000000000000004 /* Resources */,); buildRules = (); dependencies = (); name = OpenSnap; packageProductDependencies = (E00000000000000000000001 /* OpenSnapCore */, E00000000000000000000003 /* Sparkle */,); productName = OpenSnap; productReference = B00000000000000000000019 /* OpenSnap.app */; productType = "com.apple.product-type.application"; };
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		D00000000000000000000005 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 2700; LastUpgradeCheck = 2700; TargetAttributes = {D00000000000000000000001 = {CreatedOnToolsVersion = 27.0;};};}; buildConfigurationList = D00000000000000000000006 /* Build configuration list for PBXProject "OpenSnap" */; compatibilityVersion = "Xcode 15.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = C00000000000000000000002; packageReferences = (E00000000000000000000002 /* XCLocalSwiftPackageReference "." */,); productRefGroup = C00000000000000000000004 /* Products */; projectDirPath = ""; projectRoot = ""; targets = (D00000000000000000000001 /* OpenSnap */,); };
+		D00000000000000000000005 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 2700; LastUpgradeCheck = 2700; TargetAttributes = {D00000000000000000000001 = {CreatedOnToolsVersion = 27.0;};};}; buildConfigurationList = D00000000000000000000006 /* Build configuration list for PBXProject "OpenSnap" */; compatibilityVersion = "Xcode 15.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = C00000000000000000000002; packageReferences = (E00000000000000000000002 /* XCLocalSwiftPackageReference "." */, E00000000000000000000004 /* XCRemoteSwiftPackageReference "Sparkle" */,); productRefGroup = C00000000000000000000004 /* Products */; projectDirPath = ""; projectRoot = ""; targets = (D00000000000000000000001 /* OpenSnap */,); };
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -87,7 +90,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D00000000000000000000003 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000019, A0000000000000000000001A, A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A00000000000000000000004, A00000000000000000000005, A00000000000000000000006, A00000000000000000000007, A00000000000000000000008, A00000000000000000000009, A0000000000000000000000A, A0000000000000000000000B, A0000000000000000000000C, A0000000000000000000000D, A0000000000000000000000E, A0000000000000000000000F, A00000000000000000000010, A00000000000000000000011, A00000000000000000000012, A00000000000000000000013, A00000000000000000000014, A00000000000000000000015, A00000000000000000000016, A00000000000000000000017,); runOnlyForDeploymentPostprocessing = 0; };
+		D00000000000000000000003 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000019, A0000000000000000000001A, A0000000000000000000001C, A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A00000000000000000000004, A00000000000000000000005, A00000000000000000000006, A00000000000000000000007, A00000000000000000000008, A00000000000000000000009, A0000000000000000000000A, A0000000000000000000000B, A0000000000000000000000C, A0000000000000000000000D, A0000000000000000000000E, A0000000000000000000000F, A00000000000000000000010, A00000000000000000000011, A00000000000000000000012, A00000000000000000000013, A00000000000000000000014, A00000000000000000000015, A00000000000000000000016, A00000000000000000000017,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -108,8 +111,13 @@
 		E00000000000000000000002 /* XCLocalSwiftPackageReference "." */ = {isa = XCLocalSwiftPackageReference; relativePath = .; };
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		E00000000000000000000004 /* XCRemoteSwiftPackageReference "Sparkle" */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/sparkle-project/Sparkle"; requirement = {kind = exactVersion; version = 2.9.2;}; };
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		E00000000000000000000001 /* OpenSnapCore */ = {isa = XCSwiftPackageProductDependency; package = E00000000000000000000002 /* XCLocalSwiftPackageReference "." */; productName = OpenSnapCore; };
+		E00000000000000000000003 /* Sparkle */ = {isa = XCSwiftPackageProductDependency; package = E00000000000000000000004 /* XCRemoteSwiftPackageReference "Sparkle" */; productName = Sparkle; };
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D00000000000000000000005 /* Project object */;

@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct OpenSnapApp: App {
     @StateObject private var appModel = OpenSnapAppModel()
+    @StateObject private var updater = OpenSnapUpdater()
 
     var body: some Scene {
         MenuBarExtra("OpenSnap", systemImage: "rectangle.inset.filled.and.person.filled") {
@@ -10,14 +11,14 @@ struct OpenSnapApp: App {
         }
         .menuBarExtraStyle(.menu)
         .commands {
-            OpenSnapCommands()
+            OpenSnapCommands(updater: updater)
         }
 
         Window("About OpenSnap", id: "about-opensnap") {
             AboutView(
                 buildInfo: .current,
-                canCheckForUpdates: false,
-                checkForUpdates: {}
+                canCheckForUpdates: updater.canCheckForUpdates,
+                checkForUpdates: updater.checkForUpdates
             )
         }
         .windowResizability(.contentSize)

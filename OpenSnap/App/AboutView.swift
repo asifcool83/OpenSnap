@@ -78,12 +78,20 @@ struct AboutView: View {
 
 struct OpenSnapCommands: Commands {
     @Environment(\.openWindow) private var openWindow
+    @ObservedObject var updater: OpenSnapUpdater
 
     var body: some Commands {
         CommandGroup(replacing: .appInfo) {
             Button("About OpenSnap") {
                 openWindow(id: "about-opensnap")
             }
+
+            Divider()
+
+            Button("Check for Updates…") {
+                updater.checkForUpdates()
+            }
+            .disabled(!updater.canCheckForUpdates)
         }
     }
 }
