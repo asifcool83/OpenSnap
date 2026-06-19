@@ -39,7 +39,16 @@ final class OpenSnapAppModel: ObservableObject {
 
         do {
             let layoutCommand = layoutCommand(for: command)
-            try windowController.perform(.layout(layoutCommand))
+            let result = try windowController.perform(.layout(layoutCommand))
+
+            if case let .failure(failure) = result {
+                lastErrorMessage = failure.localizedDescription
+                #if DEBUG
+                DeveloperDiagnosticsCenter.shared.recordError(failure)
+                #endif
+                return
+            }
+
             lastErrorMessage = nil
             #if DEBUG
             DeveloperDiagnosticsCenter.shared.update { snapshot in

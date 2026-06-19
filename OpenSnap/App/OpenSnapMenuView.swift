@@ -12,6 +12,12 @@ struct OpenSnapMenuView: View {
 
         Divider()
 
+        Button("About OpenSnap") {
+            openWindow(id: "about-opensnap")
+        }
+
+        Divider()
+
         Button("Left Smart Snap") {
             model.perform(.smartSnap(.left))
         }

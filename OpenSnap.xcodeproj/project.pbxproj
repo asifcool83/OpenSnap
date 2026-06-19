@@ -1,0 +1,124 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00000000000000000000001 /* AccessibilityPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* AccessibilityPermission.swift */; };
+		A00000000000000000000002 /* AccessibilityWindowAccessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* AccessibilityWindowAccessing.swift */; };
+		A00000000000000000000003 /* FocusedWindowAcquisition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000003 /* FocusedWindowAcquisition.swift */; };
+		A00000000000000000000004 /* OpenSnapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000004 /* OpenSnapApp.swift */; };
+		A00000000000000000000005 /* OpenSnapAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000005 /* OpenSnapAppModel.swift */; };
+		A00000000000000000000006 /* OpenSnapMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000006 /* OpenSnapMenuView.swift */; };
+		A00000000000000000000007 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000007 /* SettingsView.swift */; };
+		A00000000000000000000008 /* DebugConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000008 /* DebugConfiguration.swift */; };
+		A00000000000000000000009 /* DeveloperDiagnosticsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000009 /* DeveloperDiagnosticsCenter.swift */; };
+		A0000000000000000000000A /* DeveloperDiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000A /* DeveloperDiagnosticsView.swift */; };
+		A0000000000000000000000B /* DeveloperFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000B /* DeveloperFormatting.swift */; };
+		A0000000000000000000000C /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000C /* AppSettings.swift */; };
+		A0000000000000000000000D /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000D /* DefaultShortcuts.swift */; };
+		A0000000000000000000000E /* KeyboardShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000E /* KeyboardShortcut.swift */; };
+		A0000000000000000000000F /* ShortcutMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000F /* ShortcutMonitor.swift */; };
+		A00000000000000000000010 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000010 /* Logger.swift */; };
+		A00000000000000000000011 /* AccessibilityWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000011 /* AccessibilityWindowController.swift */; };
+		A00000000000000000000012 /* FrontmostApplicationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000012 /* FrontmostApplicationProvider.swift */; };
+		A00000000000000000000013 /* ScreenFrameProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000013 /* ScreenFrameProviding.swift */; };
+		A00000000000000000000014 /* WindowControlling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000014 /* WindowControlling.swift */; };
+		A00000000000000000000015 /* WindowEngineError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000015 /* WindowEngineError.swift */; };
+		A00000000000000000000016 /* WindowMutationPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000016 /* WindowMutationPipeline.swift */; };
+		A00000000000000000000017 /* WindowMutationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* WindowMutationResult.swift */; };
+		A00000000000000000000018 /* OpenSnapCore in Frameworks */ = {isa = PBXBuildFile; productRef = E00000000000000000000001 /* OpenSnapCore */; };
+		A00000000000000000000019 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* BuildInfo.swift */; };
+		A0000000000000000000001A /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001B /* AboutView.swift */; };
+		A0000000000000000000001B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = E00000000000000000000003 /* Sparkle */; };
+		A0000000000000000000001C /* OpenSnapUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001C /* OpenSnapUpdater.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B00000000000000000000001 /* AccessibilityPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Accessibility/AccessibilityPermission.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000002 /* AccessibilityWindowAccessing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Accessibility/AccessibilityWindowAccessing.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000003 /* FocusedWindowAcquisition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Accessibility/FocusedWindowAcquisition.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000004 /* OpenSnapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapApp.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000005 /* OpenSnapAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapAppModel.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000006 /* OpenSnapMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapMenuView.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000007 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/SettingsView.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000008 /* DebugConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DebugConfiguration.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000009 /* DeveloperDiagnosticsCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DeveloperDiagnosticsCenter.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000000A /* DeveloperDiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DeveloperDiagnosticsView.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000000B /* DeveloperFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DeveloperFormatting.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000000C /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Settings/AppSettings.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000000D /* DefaultShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/ShortcutEngine/DefaultShortcuts.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000000E /* KeyboardShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/ShortcutEngine/KeyboardShortcut.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000000F /* ShortcutMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/ShortcutEngine/ShortcutMonitor.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000010 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Utilities/Logger.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000011 /* AccessibilityWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/WindowEngine/AccessibilityWindowController.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000012 /* FrontmostApplicationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/WindowEngine/FrontmostApplicationProvider.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000013 /* ScreenFrameProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/WindowEngine/ScreenFrameProviding.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000014 /* WindowControlling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/WindowEngine/WindowControlling.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000015 /* WindowEngineError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/WindowEngine/WindowEngineError.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000016 /* WindowMutationPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/WindowEngine/WindowMutationPipeline.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000017 /* WindowMutationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/WindowEngine/WindowMutationResult.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000018 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Configuration/Info.plist; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000019 /* OpenSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0000000000000000000001A /* BuildInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/BuildInfo.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000001B /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/AboutView.swift; sourceTree = SOURCE_ROOT; };
+		B0000000000000000000001C /* OpenSnapUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapUpdater.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C00000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000018 /* OpenSnapCore in Frameworks */, A0000000000000000000001B /* Sparkle in Frameworks */,); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C00000000000000000000002 = {isa = PBXGroup; children = (C00000000000000000000003 /* OpenSnap */, B00000000000000000000018 /* Info.plist */, C00000000000000000000004 /* Products */,); sourceTree = "<group>"; };
+		C00000000000000000000003 /* OpenSnap */ = {isa = PBXGroup; children = (B0000000000000000000001A, B0000000000000000000001B, B00000000000000000000001, B00000000000000000000002, B00000000000000000000003, B00000000000000000000004, B00000000000000000000005, B00000000000000000000006, B00000000000000000000007, B00000000000000000000008, B00000000000000000000009, B0000000000000000000000A, B0000000000000000000000B, B0000000000000000000000C, B0000000000000000000000D, B0000000000000000000000E, B0000000000000000000000F, B00000000000000000000010, B00000000000000000000011, B00000000000000000000012, B00000000000000000000013, B00000000000000000000014, B00000000000000000000015, B00000000000000000000016, B00000000000000000000017,); name = OpenSnap; sourceTree = "<group>"; };
+		C00000000000000000000004 /* Products */ = {isa = PBXGroup; children = (B00000000000000000000019 /* OpenSnap.app */,); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D00000000000000000000001 /* OpenSnap */ = {isa = PBXNativeTarget; buildConfigurationList = D00000000000000000000002 /* Build configuration list for PBXNativeTarget "OpenSnap" */; buildPhases = (D00000000000000000000003 /* Sources */, C00000000000000000000001 /* Frameworks */, D00000000000000000000004 /* Resources */,); buildRules = (); dependencies = (); name = OpenSnap; packageProductDependencies = (E00000000000000000000001 /* OpenSnapCore */, E00000000000000000000003 /* Sparkle */,); productName = OpenSnap; productReference = B00000000000000000000019 /* OpenSnap.app */; productType = "com.apple.product-type.application"; };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D00000000000000000000005 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 2700; LastUpgradeCheck = 2700; TargetAttributes = {D00000000000000000000001 = {CreatedOnToolsVersion = 27.0;};};}; buildConfigurationList = D00000000000000000000006 /* Build configuration list for PBXProject "OpenSnap" */; compatibilityVersion = "Xcode 15.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = C00000000000000000000002; packageReferences = (E00000000000000000000002 /* XCLocalSwiftPackageReference "." */, E00000000000000000000004 /* XCRemoteSwiftPackageReference "Sparkle" */,); productRefGroup = C00000000000000000000004 /* Products */; projectDirPath = ""; projectRoot = ""; targets = (D00000000000000000000001 /* OpenSnap */,); };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D00000000000000000000004 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D00000000000000000000003 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000019, A0000000000000000000001A, A0000000000000000000001C, A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A00000000000000000000004, A00000000000000000000005, A00000000000000000000006, A00000000000000000000007, A00000000000000000000008, A00000000000000000000009, A0000000000000000000000A, A0000000000000000000000B, A0000000000000000000000C, A0000000000000000000000D, A0000000000000000000000E, A0000000000000000000000F, A00000000000000000000010, A00000000000000000000011, A00000000000000000000012, A00000000000000000000013, A00000000000000000000014, A00000000000000000000015, A00000000000000000000016, A00000000000000000000017,); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		F00000000000000000000001 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; COPY_PHASE_STRIP = NO; DEBUG_INFORMATION_FORMAT = dwarf; ENABLE_TESTABILITY = YES; GCC_C_LANGUAGE_STANDARD = gnu17; MACOSX_DEPLOYMENT_TARGET = 15.0; ONLY_ACTIVE_ARCH = YES; SDKROOT = macosx; SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)"; SWIFT_OPTIMIZATION_LEVEL = "-Onone";}; name = Debug; };
+		F00000000000000000000002 /* Beta */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; ENABLE_NS_ASSERTIONS = NO; GCC_C_LANGUAGE_STANDARD = gnu17; MACOSX_DEPLOYMENT_TARGET = 15.0; SDKROOT = macosx; SWIFT_ACTIVE_COMPILATION_CONDITIONS = "BETA $(inherited)"; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O";}; name = Beta; };
+		F00000000000000000000003 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; ENABLE_NS_ASSERTIONS = NO; GCC_C_LANGUAGE_STANDARD = gnu17; MACOSX_DEPLOYMENT_TARGET = 15.0; SDKROOT = macosx; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_OPTIMIZATION_LEVEL = "-O";}; name = Release; };
+		F00000000000000000000004 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; DEAD_CODE_STRIPPING = YES; ENABLE_HARDENED_RUNTIME = YES; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Configuration/Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks",); MACOSX_DEPLOYMENT_TARGET = 15.0; MARKETING_VERSION = "0.1.0-beta.1"; PRODUCT_BUNDLE_IDENTIFIER = org.opensnap.OpenSnap; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = NO; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 6.0;}; name = Debug; };
+		F00000000000000000000005 /* Beta */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; DEAD_CODE_STRIPPING = YES; ENABLE_HARDENED_RUNTIME = YES; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Configuration/Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks",); MACOSX_DEPLOYMENT_TARGET = 15.0; MARKETING_VERSION = "0.1.0-beta.1"; PRODUCT_BUNDLE_IDENTIFIER = org.opensnap.OpenSnap; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = NO; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 6.0;}; name = Beta; };
+		F00000000000000000000006 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; COMBINE_HIDPI_IMAGES = YES; CURRENT_PROJECT_VERSION = 1; DEAD_CODE_STRIPPING = YES; ENABLE_HARDENED_RUNTIME = YES; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = Configuration/Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks",); MACOSX_DEPLOYMENT_TARGET = 15.0; MARKETING_VERSION = "0.1.0-beta.1"; PRODUCT_BUNDLE_IDENTIFIER = org.opensnap.OpenSnap; PRODUCT_NAME = "$(TARGET_NAME)"; SKIP_INSTALL = NO; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 6.0;}; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D00000000000000000000002 /* Build configuration list for PBXNativeTarget "OpenSnap" */ = {isa = XCConfigurationList; buildConfigurations = (F00000000000000000000004 /* Debug */, F00000000000000000000005 /* Beta */, F00000000000000000000006 /* Release */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		D00000000000000000000006 /* Build configuration list for PBXProject "OpenSnap" */ = {isa = XCConfigurationList; buildConfigurations = (F00000000000000000000001 /* Debug */, F00000000000000000000002 /* Beta */, F00000000000000000000003 /* Release */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E00000000000000000000002 /* XCLocalSwiftPackageReference "." */ = {isa = XCLocalSwiftPackageReference; relativePath = .; };
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E00000000000000000000004 /* XCRemoteSwiftPackageReference "Sparkle" */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/sparkle-project/Sparkle"; requirement = {kind = exactVersion; version = 2.9.2;}; };
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E00000000000000000000001 /* OpenSnapCore */ = {isa = XCSwiftPackageProductDependency; package = E00000000000000000000002 /* XCLocalSwiftPackageReference "." */; productName = OpenSnapCore; };
+		E00000000000000000000003 /* Sparkle */ = {isa = XCSwiftPackageProductDependency; package = E00000000000000000000004 /* XCRemoteSwiftPackageReference "Sparkle" */; productName = Sparkle; };
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D00000000000000000000005 /* Project object */;
+}
