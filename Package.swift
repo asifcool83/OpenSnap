@@ -1,11 +1,11 @@
-// swift-tools-version: 6.4
+// swift-tools-version: 6.0
 
 import PackageDescription
 
 let package = Package(
     name: "OpenSnap",
     platforms: [
-        .macOS(.v27)
+        .macOS(.v15)
     ],
     products: [
         .library(name: "OpenSnapCore", targets: ["OpenSnapCore"]),
