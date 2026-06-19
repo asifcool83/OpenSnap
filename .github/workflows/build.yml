@@ -18,5 +18,15 @@ jobs:
       - name: Show Swift version
         run: swift --version
 
-      - name: Build
+      - name: Build Swift package
         run: swift build
+
+      - name: Build native app
+        run: >-
+          xcodebuild
+          -project OpenSnap.xcodeproj
+          -scheme OpenSnap
+          -configuration Debug
+          -derivedDataPath "$RUNNER_TEMP/OpenSnapDerivedData"
+          CODE_SIGNING_ALLOWED=NO
+          build
