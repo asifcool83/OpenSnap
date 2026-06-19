@@ -27,11 +27,11 @@ struct OpenSnapApp: App {
             SettingsView(settings: appModel.settings)
         }
 
-        #if DEBUG
-        Window("Developer Diagnostics", id: "developer-diagnostics") {
-            DeveloperDiagnosticsView(
-                diagnostics: .shared,
-                refresh: appModel.refreshDeveloperDiagnostics
+        #if DEBUG || BETA
+        Window("OpenSnap Inspector", id: "opensnap-inspector") {
+            OpenSnapInspectorView(
+                inspector: .shared,
+                refresh: appModel.refreshInspector
             )
         }
         .defaultSize(width: 820, height: 640)

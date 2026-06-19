@@ -54,8 +54,8 @@ public final class AXFocusedWindowProvider: FocusedWindowProviding {
         case let .success(window):
             return window
         case let .failure(focusedWindowFailure):
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.record(.warning, "Unable to obtain AXFocusedWindow")
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.record(.warning, category: .accessibility, "Unable to obtain AXFocusedWindow")
             #endif
 
             switch targetReader.window(for: application, target: .mainWindow) {

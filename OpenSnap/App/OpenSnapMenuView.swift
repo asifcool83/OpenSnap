@@ -39,11 +39,11 @@ struct OpenSnapMenuView: View {
             Text(message)
         }
 
-        #if DEBUG
+        #if DEBUG || BETA
         Divider()
 
-        Button("Developer Diagnostics") {
-            openWindow(id: "developer-diagnostics")
+        Button("OpenSnap Inspector") {
+            openWindow(id: "opensnap-inspector")
         }
         #endif
 

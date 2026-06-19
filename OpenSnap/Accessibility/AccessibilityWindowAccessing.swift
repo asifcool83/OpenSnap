@@ -115,7 +115,7 @@ final class AXAccessibilityWindow: AccessibilityWindowAccessing {
     }
 }
 
-#if DEBUG
+#if DEBUG || BETA
 @MainActor
 protocol AccessibilityWindowDiagnosticsProviding: AnyObject {
     var windowTitle: String? { get }

@@ -1,10 +1,7 @@
-#if DEBUG
+#if DEBUG || BETA
 
-import Foundation
-
-enum DebugConfiguration {
-    static let isDeveloperDiagnosticsEnabled = true
-    static let diagnosticsRefreshIntervalNanoseconds: UInt64 = 1_000_000_000
+enum InspectorConfiguration {
+    static let refreshIntervalNanoseconds: UInt64 = 1_000_000_000
 }
 
 #endif

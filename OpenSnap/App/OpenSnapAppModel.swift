@@ -25,59 +25,57 @@ final class OpenSnapAppModel: ObservableObject {
 
     func requestAccessibilityPermission() {
         permissionGranted = permissionProvider.requestIfNeeded()
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.update { snapshot in
-            snapshot.accessibilityPermissionStatus = permissionGranted ? "Granted" : "Missing"
+        #if DEBUG || BETA
+        if permissionGranted {
+            OpenSnapInspector.shared.update { snapshot in
+                snapshot.accessibilityStatus = "Granted"
+            }
+        } else {
+            OpenSnapInspector.shared.recordAccessibilityMissing()
         }
         #endif
     }
 
     func perform(_ command: ShortcutCommand) {
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.recordShortcut(command)
-        #endif
-
         do {
             let layoutCommand = layoutCommand(for: command)
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.recordShortcut(layoutCommand)
+            #endif
             let result = try windowController.perform(.layout(layoutCommand))
 
             if case let .failure(failure) = result {
                 lastErrorMessage = failure.localizedDescription
-                #if DEBUG
-                DeveloperDiagnosticsCenter.shared.recordError(failure)
+                #if DEBUG || BETA
+                OpenSnapInspector.shared.recordResult(result)
                 #endif
                 return
             }
 
             lastErrorMessage = nil
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.update { snapshot in
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.recordResult(result)
+            OpenSnapInspector.shared.update { snapshot in
                 snapshot.lastError = "None"
             }
             #endif
         } catch {
             lastErrorMessage = error.localizedDescription
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.recordError(error)
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.recordError(error)
             #endif
         }
     }
 
-    #if DEBUG
-    func refreshDeveloperDiagnostics() {
-        guard DebugConfiguration.isDeveloperDiagnosticsEnabled else {
-            return
-        }
-
+    #if DEBUG || BETA
+    func refreshInspector() {
         do {
             _ = try windowController.focusedWindowFrame()
             lastErrorMessage = nil
         } catch WindowEngineError.accessibilityPermissionRequired {
-            DeveloperDiagnosticsCenter.shared.update { snapshot in
-                snapshot.accessibilityPermissionStatus = "Missing"
-            }
+            OpenSnapInspector.shared.recordAccessibilityMissing(recordEvent: false)
         } catch {
-            DeveloperDiagnosticsCenter.shared.update { snapshot in
+            OpenSnapInspector.shared.update { snapshot in
                 snapshot.lastError = error.localizedDescription
             }
         }
@@ -91,22 +89,27 @@ final class OpenSnapAppModel: ObservableObject {
 
         monitor.start()
         shortcutMonitor = monitor
+        #if DEBUG || BETA
+        OpenSnapInspector.shared.update { snapshot in
+            snapshot.keyboardHookStatus = monitor.isRunning ? "Active" : "Unavailable"
+        }
+        #endif
     }
 
     private func layoutCommand(for command: ShortcutCommand) -> LayoutCommand {
         switch command {
         case let .layout(layoutCommand):
             smartSnapController.reset()
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.update { snapshot in
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.update { snapshot in
                 snapshot.currentSmartSnapState = "Reset"
             }
             #endif
             return layoutCommand
         case let .smartSnap(side):
             let step = smartSnapController.nextStep(for: side)
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.update { snapshot in
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.update { snapshot in
                 snapshot.currentSmartSnapState = "\(side) \(Int(step.ratio * 100))%"
             }
             #endif

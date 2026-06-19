@@ -42,7 +42,7 @@ struct AboutView: View {
 
             HStack {
                 Button("Open Inspector") {
-                    openWindow(id: "developer-diagnostics")
+                    openWindow(id: "opensnap-inspector")
                 }
                 .disabled(!Self.inspectorAvailable)
 
@@ -68,7 +68,7 @@ struct AboutView: View {
     }
 
     private static var inspectorAvailable: Bool {
-        #if DEBUG
+        #if DEBUG || BETA
         true
         #else
         false

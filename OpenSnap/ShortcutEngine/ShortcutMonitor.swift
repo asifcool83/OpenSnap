@@ -9,6 +9,10 @@ public final class ShortcutMonitor {
     private let handler: (ShortcutCommand) -> Void
     private var monitor: Any?
 
+    public var isRunning: Bool {
+        monitor != nil
+    }
+
     public init(
         shortcuts: [KeyboardShortcut] = DefaultShortcuts.all,
         handler: @escaping (ShortcutCommand) -> Void

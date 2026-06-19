@@ -11,5 +11,5 @@ All notable changes to OpenSnap will be documented in this file.
 - Hardened the Window Engine with injectable frontmost-app and screen providers, focused-window frame reads, move/resize operations, richer failures, and tested multi-monitor screen resolution.
 - Added layout calculations for halves, thirds, center, maximize, left 60%, right 40%, and Smart Snap.
 - Added keyboard shortcut monitoring.
-- Added Debug-only Developer Diagnostics with live Window Engine state and structured diagnostic logs.
+- Added OpenSnap Inspector to Debug and Beta builds with structured events, clipboard diagnostics, and ZIP report export.
 - Added unit tests for layout calculations and Smart Snap cycling.
