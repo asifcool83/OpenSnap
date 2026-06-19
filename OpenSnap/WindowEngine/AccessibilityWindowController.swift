@@ -98,7 +98,9 @@ public final class AccessibilityWindowController: WindowControlling {
     @discardableResult
     public func perform(_ operation: WindowOperation) throws -> WindowMutationResult {
         #if DEBUG || BETA
-        OpenSnapInspector.shared.recordOperation("WindowEngine \(String(describing: operation))")
+        if case let .layout(command) = operation {
+            OpenSnapInspector.shared.recordOperation("Applying \(InspectorDescriptions.layout(command))")
+        }
         #endif
 
         try requireAccessibilityPermission()
@@ -130,10 +132,7 @@ public final class AccessibilityWindowController: WindowControlling {
     private func requireAccessibilityPermission() throws {
         guard permissionProvider.isTrusted else {
             #if DEBUG || BETA
-            OpenSnapInspector.shared.update { snapshot in
-                snapshot.accessibilityStatus = "Missing"
-            }
-            OpenSnapInspector.shared.record(.warning, category: .accessibility, "Accessibility permission missing")
+            OpenSnapInspector.shared.recordAccessibilityMissing()
             #endif
             throw WindowEngineError.accessibilityPermissionRequired
         }

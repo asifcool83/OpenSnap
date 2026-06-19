@@ -56,6 +56,10 @@ struct OpenSnapInspectorView: View {
                                     Text(event.category.rawValue)
                                         .foregroundStyle(.secondary)
                                     Text(event.message)
+                                    if event.repeatCount > 0 {
+                                        Text("Repeated \(event.repeatCount) times")
+                                            .foregroundStyle(.secondary)
+                                    }
                                     Spacer()
                                     Text(event.timestamp, style: .time)
                                         .foregroundStyle(.secondary)

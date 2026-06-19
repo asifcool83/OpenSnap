@@ -28,6 +28,21 @@ final class OpenSnapInspector: ObservableObject {
         _ message: String,
         timestamp: Date = Date()
     ) {
+        if let latest = events.first,
+           latest.severity == severity,
+           latest.category == category,
+           latest.message == message {
+            events[0] = InspectorEvent(
+                id: latest.id,
+                timestamp: timestamp,
+                severity: severity,
+                category: category,
+                message: message,
+                repeatCount: latest.repeatCount + 1
+            )
+            return
+        }
+
         events.insert(
             InspectorEvent(
                 timestamp: timestamp,
@@ -43,8 +58,8 @@ final class OpenSnapInspector: ObservableObject {
         }
     }
 
-    func recordShortcut(_ command: ShortcutCommand, timestamp: Date = Date()) {
-        let shortcut = String(describing: command)
+    func recordShortcut(_ command: LayoutCommand, timestamp: Date = Date()) {
+        let shortcut = InspectorDescriptions.layout(command)
         snapshot.lastShortcut = shortcut
         snapshot.lastActionTimestamp = timestamp
         snapshot.lastActionResult = "In progress"
@@ -81,6 +96,39 @@ final class OpenSnapInspector: ObservableObject {
         snapshot.lastError = error.localizedDescription
         snapshot.lastActionResult = "Failure"
         record(.error, category: .windowEngine, error.localizedDescription)
+    }
+
+    func recordAccessibilityMissing(recordEvent: Bool = true) {
+        let explanation = "Accessibility permission is required to inspect the active window."
+        snapshot.accessibilityStatus = "Permission required"
+        snapshot.targetApplication = explanation
+        snapshot.windowTitle = explanation
+        snapshot.bundleIdentifier = explanation
+        snapshot.windowID = explanation
+        snapshot.currentFrame = explanation
+        snapshot.targetFrame = explanation
+        snapshot.actualFrame = explanation
+        if recordEvent {
+            record(.warning, category: .accessibility, "Accessibility permission missing")
+        }
+    }
+}
+
+enum InspectorDescriptions {
+    static func layout(_ command: LayoutCommand) -> String {
+        switch command {
+        case .leftSixty: "Snap Left (60%)"
+        case .rightForty: "Snap Right (40%)"
+        case .leftHalf: "Snap Left (50%)"
+        case .rightHalf: "Snap Right (50%)"
+        case .leftThird: "Snap Left Third"
+        case .centerThird: "Snap Center Third"
+        case .rightThird: "Snap Right Third"
+        case .maximize: "Maximize"
+        case .center: "Center"
+        case let .smartSnap(side, step):
+            "Snap \(side == .left ? "Left" : "Right") (\(Int((step.ratio * 100).rounded()))%)"
+        }
     }
 }
 
@@ -128,18 +176,21 @@ struct InspectorEvent: Identifiable, Equatable, Codable {
     let severity: Severity
     let category: Category
     let message: String
+    let repeatCount: Int
 
     init(
         id: UUID = UUID(),
         timestamp: Date,
         severity: Severity,
         category: Category,
-        message: String
+        message: String,
+        repeatCount: Int = 0
     ) {
         self.id = id
         self.timestamp = timestamp
         self.severity = severity
         self.category = category
         self.message = message
+        self.repeatCount = repeatCount
     }
 }

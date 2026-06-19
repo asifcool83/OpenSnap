@@ -26,19 +26,22 @@ final class OpenSnapAppModel: ObservableObject {
     func requestAccessibilityPermission() {
         permissionGranted = permissionProvider.requestIfNeeded()
         #if DEBUG || BETA
-        OpenSnapInspector.shared.update { snapshot in
-            snapshot.accessibilityStatus = permissionGranted ? "Granted" : "Missing"
+        if permissionGranted {
+            OpenSnapInspector.shared.update { snapshot in
+                snapshot.accessibilityStatus = "Granted"
+            }
+        } else {
+            OpenSnapInspector.shared.recordAccessibilityMissing()
         }
         #endif
     }
 
     func perform(_ command: ShortcutCommand) {
-        #if DEBUG || BETA
-        OpenSnapInspector.shared.recordShortcut(command)
-        #endif
-
         do {
             let layoutCommand = layoutCommand(for: command)
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.recordShortcut(layoutCommand)
+            #endif
             let result = try windowController.perform(.layout(layoutCommand))
 
             if case let .failure(failure) = result {
@@ -70,9 +73,7 @@ final class OpenSnapAppModel: ObservableObject {
             _ = try windowController.focusedWindowFrame()
             lastErrorMessage = nil
         } catch WindowEngineError.accessibilityPermissionRequired {
-            OpenSnapInspector.shared.update { snapshot in
-                snapshot.accessibilityStatus = "Missing"
-            }
+            OpenSnapInspector.shared.recordAccessibilityMissing(recordEvent: false)
         } catch {
             OpenSnapInspector.shared.update { snapshot in
                 snapshot.lastError = error.localizedDescription

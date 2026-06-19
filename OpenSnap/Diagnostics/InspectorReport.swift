@@ -27,11 +27,13 @@ struct InspectorReport {
 
     var humanReadable: String {
         """
-        OpenSnap Diagnostic Report
+        OPEN SNAP — DIAGNOSTIC REPORT
+        =============================
         Report ID: \(reportID.uuidString)
         Generated: \(Self.dateString(generatedAt))
 
-        Build
+        BUILD IDENTITY
+        --------------
         Version: \(buildInfo.version)
         Build: \(buildInfo.buildNumber)
         Git commit: \(buildInfo.gitCommit ?? "Unavailable")
@@ -39,18 +41,21 @@ struct InspectorReport {
         macOS: \(buildInfo.macOSVersion)
         Architecture: \(buildInfo.cpuArchitecture)
 
-        Status
+        STATUS
+        ------
         Accessibility: \(snapshot.accessibilityStatus)
         Keyboard hook: \(snapshot.keyboardHookStatus)
         Window engine: \(snapshot.windowEngineStatus)
 
-        Last Action
+        LAST ACTION
+        -----------
         Shortcut: \(snapshot.lastShortcut)
         Timestamp: \(snapshot.lastActionTimestamp.map(Self.dateString) ?? "Unavailable")
         Target application: \(snapshot.targetApplication)
         Result: \(snapshot.lastActionResult)
 
-        Current Window
+        CURRENT WINDOW
+        --------------
         Title: \(snapshot.windowTitle)
         Bundle identifier: \(snapshot.bundleIdentifier)
         Window ID: \(snapshot.windowID)
@@ -58,10 +63,12 @@ struct InspectorReport {
         Target frame: \(snapshot.targetFrame)
         Actual frame: \(snapshot.actualFrame)
 
-        Last Error
+        LAST ERROR
+        ----------
         \(snapshot.lastError)
 
-        Recent Diagnostics
+        RECENT DIAGNOSTICS
+        ------------------
         \(logsText)
         """
     }
@@ -103,7 +110,8 @@ struct InspectorReport {
     private var logsText: String {
         guard !events.isEmpty else { return "No diagnostic events recorded." }
         return events.map {
-            "\(Self.dateString($0.timestamp)) [\($0.severity.rawValue)] [\($0.category.rawValue)] \($0.message)"
+            let repetition = $0.repeatCount > 0 ? " — Repeated \($0.repeatCount) times" : ""
+            return "\(Self.dateString($0.timestamp)) [\($0.severity.rawValue)] [\($0.category.rawValue)] \($0.message)\(repetition)"
         }.joined(separator: "\n")
     }
 }
