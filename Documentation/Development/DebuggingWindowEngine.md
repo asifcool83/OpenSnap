@@ -1,40 +1,31 @@
-# Debugging the Window Engine
+# OpenSnap Inspector
 
-Developer Diagnostics is available only in Debug builds.
+OpenSnap Inspector is available in Debug and Beta builds as a lightweight support utility. It is not telemetry: all information remains local until the user explicitly copies or exports it.
 
-## Opening Diagnostics
+## Opening Inspector
 
-Run OpenSnap in a Debug build, open the menu bar item, and choose Developer Diagnostics.
+Open the OpenSnap menu bar item and choose **OpenSnap Inspector**, or use **Open Inspector** in About OpenSnap.
 
-The diagnostics window shows:
+The single-window interface shows:
 
-- frontmost application and bundle identifier
-- focused window title and window ID when available
-- current window frame
-- selected visible screen frame
-- screen dimensions
-- Accessibility permission status
-- whether the focused window appears movable or resizable
-- current Smart Snap state
-- last shortcut received
-- last WindowEngine operation
-- last error
-- debug-only structured WindowEngine logs
+- Status: app version, build, Accessibility, keyboard hook, and Window Engine
+- Last Action: shortcut, timestamp, target application/window, and result
+- Current Window: title, bundle identifier, window ID, and current/target/actual frames
+- Diagnostics: last error and the most recent 100 structured events
 
-## Logging
+Each event has a timestamp, severity, category, and message. Routine Inspector refreshes do not create events.
 
-WindowEngine diagnostic logs are compiled only in Debug builds. Release builds do not include the diagnostics window or debug log recording.
+## Support Reports
 
-Useful entries include:
+**Copy Diagnostics** writes a human-readable report to the clipboard. **Export Report** uses the native Save panel to create a ZIP containing:
 
-```text
-[INFO] Focused Safari
-[INFO] Move Window
-[INFO] Resize Window
-[WARNING] Accessibility permission missing
-[ERROR] Unable to obtain AXFocusedWindow
-```
+- `report.json`
+- `logs.txt`
+- `system.json`
+- `version.json`
+
+Each report has a unique Report ID. Reports may include window titles and application identifiers, so testers should review them before sharing.
 
 ## Multi-Monitor Debugging
 
-When debugging display issues, compare the current window frame with the visible frame and screen dimensions shown in diagnostics. OpenSnap chooses the screen with the largest overlap with the focused window, falling back to the nearest screen if the saved window frame no longer intersects any display.
+When debugging display issues, compare the current, target, and actual frames. OpenSnap chooses the screen with the largest overlap with the focused window, falling back to the nearest screen if the saved window frame no longer intersects any display.

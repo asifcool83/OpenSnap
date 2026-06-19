@@ -6,7 +6,7 @@
 - Core/app target split
 - Layout calculation foundation
 - Window Engine foundation
-- Developer Diagnostics
+- OpenSnap Inspector foundation
 - Design System v1
 - Repository governance
 
