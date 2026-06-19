@@ -9,6 +9,18 @@ struct OpenSnapApp: App {
             OpenSnapMenuView(model: appModel)
         }
         .menuBarExtraStyle(.menu)
+        .commands {
+            OpenSnapCommands()
+        }
+
+        Window("About OpenSnap", id: "about-opensnap") {
+            AboutView(
+                buildInfo: .current,
+                canCheckForUpdates: false,
+                checkForUpdates: {}
+            )
+        }
+        .windowResizability(.contentSize)
 
         Settings {
             SettingsView(settings: appModel.settings)

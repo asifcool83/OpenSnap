@@ -26,5 +26,11 @@
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>OpenSnapBuildDate</key>
+    <string>$(OPEN_SNAP_BUILD_DATE)</string>
+    <key>OpenSnapGitBranch</key>
+    <string>$(OPEN_SNAP_GIT_BRANCH)</string>
+    <key>OpenSnapGitCommit</key>
+    <string>$(OPEN_SNAP_GIT_COMMIT)</string>
 </dict>
 </plist>
