@@ -49,6 +49,14 @@ swift build
 swift test
 ```
 
+Build the native application target used for beta distribution and releases:
+
+```sh
+xcodebuild -project OpenSnap.xcodeproj -scheme OpenSnap -configuration Debug build
+```
+
+The native app owns bundle identity, About, and Sparkle updates. See [`Updates/README.md`](Updates/README.md) for release publishing.
+
 OpenSnap targets macOS 27 or newer.
 
 ## Project Structure

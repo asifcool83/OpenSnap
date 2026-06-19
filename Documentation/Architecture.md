@@ -8,6 +8,8 @@ OpenSnap keeps window management behavior split into small, testable areas.
 
 `OpenSnap` contains the executable app, SwiftUI views, AppKit integration, Accessibility API integration, and other macOS wiring. It depends on `OpenSnapCore`.
 
+`OpenSnap.xcodeproj` owns the native macOS application target used for development, beta distribution, and releases. The Swift package remains the source layout and test harness; it is not the distribution artifact.
+
 ## App
 
 The app layer owns SwiftUI views, app lifecycle, and service wiring.
@@ -48,6 +50,12 @@ Settings stores user-configurable preferences and default shortcuts.
 
 Shared, dependency-free helpers live here.
 
-## Developer Diagnostics
+## Build Identity and Updates
 
-Developer Diagnostics lives in the app target and is compiled only for Debug builds. It can inspect Accessibility/AppKit state, show a diagnostics window, and record structured debug logs without shipping those tools in Release builds.
+`BuildInfo` is the single runtime source for app version, build number, optional source revision metadata, and system identity. The native app target owns Sparkle because update delivery is a distribution concern, not core or package behavior.
+
+Sparkle checks the repository-hosted appcast and downloads signed archives from GitHub Releases. Publishing conventions are documented in [`Updates/README.md`](../Updates/README.md).
+
+## Inspector
+
+Diagnostic UI lives in the app target. OpenSnap Inspector ships in Debug and Beta builds to support external testing. Production Release builds may later reduce or disable advanced diagnostics.

@@ -52,8 +52,16 @@ Reason: It communicates focus, context, simplicity, precision, balance, and inst
 
 ## ADR-0007: Debug Tooling Must Not Ship As Product UI
 
-Status: Accepted
+Status: Superseded by ADR-0008
 
 Developer diagnostics and debug logging should be compiled only in Debug builds.
 
 Reason: Diagnostics improve engineering quality, but Release builds should stay minimal and user-focused.
+
+## ADR-0008: Inspector Ships In Beta Builds
+
+Status: Accepted
+
+OpenSnap Inspector and its advanced diagnostics ship in Beta builds to support external testers. Production Release builds may later reduce or disable advanced diagnostics.
+
+Reason: Beta feedback is actionable only when testers can provide enough context to reproduce and diagnose failures without telemetry.
