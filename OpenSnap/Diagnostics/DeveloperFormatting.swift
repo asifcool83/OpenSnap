@@ -1,9 +1,7 @@
-#if DEBUG
-
 import Foundation
 import OpenSnapCore
 
-enum DeveloperFormatting {
+enum InspectorFormatting {
     static func frame(_ frame: WindowFrame) -> String {
         "x: \(rounded(frame.x)), y: \(rounded(frame.y)), w: \(rounded(frame.width)), h: \(rounded(frame.height))"
     }
@@ -16,5 +14,3 @@ enum DeveloperFormatting {
         String(format: "%.0f", value)
     }
 }
-
-#endif

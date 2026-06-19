@@ -34,10 +34,6 @@ public final class AccessibilityWindowController: WindowControlling {
     }
 
     public func focusedWindowFrame() throws -> WindowFrame {
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.recordOperation("Read Focused Window Frame")
-        #endif
-
         try requireAccessibilityPermission()
 
         let context = try focusedWindowContext()
@@ -47,8 +43,8 @@ public final class AccessibilityWindowController: WindowControlling {
     }
 
     public func moveFocusedWindow(to origin: WindowPoint) throws {
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.recordOperation("Move Window")
+        #if DEBUG || BETA
+        OpenSnapInspector.shared.recordOperation("Move Window")
         #endif
 
         try requireAccessibilityPermission()
@@ -60,8 +56,8 @@ public final class AccessibilityWindowController: WindowControlling {
     }
 
     public func resizeFocusedWindow(to size: WindowSize) throws {
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.recordOperation("Resize Window")
+        #if DEBUG || BETA
+        OpenSnapInspector.shared.recordOperation("Resize Window")
         #endif
 
         try requireAccessibilityPermission()
@@ -75,8 +71,8 @@ public final class AccessibilityWindowController: WindowControlling {
 
     @discardableResult
     public func setFocusedWindowFrame(_ frame: WindowFrame) throws -> WindowMutationResult {
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.recordOperation("Set Window Frame")
+        #if DEBUG || BETA
+        OpenSnapInspector.shared.recordOperation("Set Window Frame")
         #endif
 
         try requireAccessibilityPermission()
@@ -101,8 +97,8 @@ public final class AccessibilityWindowController: WindowControlling {
 
     @discardableResult
     public func perform(_ operation: WindowOperation) throws -> WindowMutationResult {
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.recordOperation("WindowEngine \(String(describing: operation))")
+        #if DEBUG || BETA
+        OpenSnapInspector.shared.recordOperation("WindowEngine \(String(describing: operation))")
         #endif
 
         try requireAccessibilityPermission()
@@ -119,6 +115,12 @@ public final class AccessibilityWindowController: WindowControlling {
             }
 
             let newFrame = layoutCalculator.frame(for: command, in: screenFrame)
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.update { snapshot in
+                snapshot.currentFrame = InspectorFormatting.frame(currentFrame)
+                snapshot.targetFrame = InspectorFormatting.frame(newFrame)
+            }
+            #endif
             let result = mutationPipeline.apply(newFrame, to: context.window)
             try? updateDiagnostics(for: result, context: context, visibleFrame: screenFrame)
             return result
@@ -127,31 +129,24 @@ public final class AccessibilityWindowController: WindowControlling {
 
     private func requireAccessibilityPermission() throws {
         guard permissionProvider.isTrusted else {
-            #if DEBUG
-            DeveloperDiagnosticsCenter.shared.update { snapshot in
-                snapshot.accessibilityPermissionStatus = "Missing"
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.update { snapshot in
+                snapshot.accessibilityStatus = "Missing"
             }
-            DeveloperDiagnosticsCenter.shared.record(.warning, "Accessibility permission missing")
+            OpenSnapInspector.shared.record(.warning, category: .accessibility, "Accessibility permission missing")
             #endif
             throw WindowEngineError.accessibilityPermissionRequired
         }
 
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.update { snapshot in
-            snapshot.accessibilityPermissionStatus = "Granted"
+        #if DEBUG || BETA
+        OpenSnapInspector.shared.update { snapshot in
+            snapshot.accessibilityStatus = "Granted"
         }
         #endif
     }
 
     private func focusedWindowContext() throws -> FocusedWindowContext {
         let frontmostApplication = try frontmostApplicationProvider.frontmostApplication()
-
-        #if DEBUG
-        DeveloperDiagnosticsCenter.shared.record(
-            .info,
-            "Focused \(frontmostApplication.localizedName ?? "Unknown Application")"
-        )
-        #endif
 
         return FocusedWindowContext(
             application: frontmostApplication,
@@ -182,7 +177,7 @@ public final class AccessibilityWindowController: WindowControlling {
         )
     }
 
-    #if DEBUG
+    #if DEBUG || BETA
     private func updateDiagnostics(
         application: FrontmostApplication,
         window: any AccessibilityWindowAccessing,
@@ -199,18 +194,18 @@ public final class AccessibilityWindowController: WindowControlling {
         }
         let windowDiagnostics = window as? AccessibilityWindowDiagnosticsProviding
 
-        DeveloperDiagnosticsCenter.shared.update { snapshot in
-            snapshot.frontmostApplication = application.localizedName ?? "Unknown"
+        OpenSnapInspector.shared.update { snapshot in
+            snapshot.targetApplication = application.localizedName ?? "Unknown"
             snapshot.bundleIdentifier = application.bundleIdentifier ?? "Unavailable"
             snapshot.windowTitle = windowDiagnostics?.windowTitle ?? "Unavailable"
             snapshot.windowID = windowDiagnostics?.windowID.map(String.init) ?? "Unavailable"
-            snapshot.windowFrame = DeveloperFormatting.frame(windowFrame)
-            snapshot.visibleFrame = visibleFrame.map(DeveloperFormatting.frame) ?? "Unavailable"
+            snapshot.actualFrame = InspectorFormatting.frame(windowFrame)
+            snapshot.visibleFrame = visibleFrame.map(InspectorFormatting.frame) ?? "Unavailable"
             snapshot.screenBeingUsed = screenIndex.map { "Screen \($0 + 1)" } ?? "Unavailable"
             snapshot.screenDimensions = visibleFrame.map {
-                DeveloperFormatting.size(width: $0.width, height: $0.height)
+                InspectorFormatting.size(width: $0.width, height: $0.height)
             } ?? "Unavailable"
-            snapshot.accessibilityPermissionStatus = "Granted"
+            snapshot.accessibilityStatus = "Granted"
             snapshot.isWindowMovable = windowDiagnostics?.isMovable ?? "Unknown"
             snapshot.isWindowResizable = windowDiagnostics?.isResizable ?? "Unknown"
         }

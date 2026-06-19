@@ -1,85 +1,164 @@
-#if DEBUG
+#if DEBUG || BETA
 
+import AppKit
 import SwiftUI
 
-struct DeveloperDiagnosticsView: View {
-    @ObservedObject var diagnostics: DeveloperDiagnosticsCenter
+struct OpenSnapInspectorView: View {
+    @ObservedObject var inspector: OpenSnapInspector
     let refresh: @MainActor () -> Void
-
-    private let columns = [
-        GridItem(.fixed(220), alignment: .leading),
-        GridItem(.flexible(), alignment: .leading)
-    ]
+    @State private var message: String?
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
-                    field("Frontmost application", diagnostics.snapshot.frontmostApplication)
-                    field("Bundle identifier", diagnostics.snapshot.bundleIdentifier)
-                    field("Window title", diagnostics.snapshot.windowTitle)
-                    field("Window ID", diagnostics.snapshot.windowID)
-                    field("Window frame", diagnostics.snapshot.windowFrame)
-                    field("Visible frame", diagnostics.snapshot.visibleFrame)
-                    field("Screen being used", diagnostics.snapshot.screenBeingUsed)
-                    field("Screen dimensions", diagnostics.snapshot.screenDimensions)
-                    field("Accessibility permission", diagnostics.snapshot.accessibilityPermissionStatus)
-                    field("Window movable", diagnostics.snapshot.isWindowMovable)
-                    field("Window resizable", diagnostics.snapshot.isWindowResizable)
-                    field("Smart Snap state", diagnostics.snapshot.currentSmartSnapState)
-                    field("Current shortcut", diagnostics.snapshot.currentShortcut)
-                    field("Last WindowEngine operation", diagnostics.snapshot.lastWindowEngineOperation)
-                    field("Last error", diagnostics.snapshot.lastError)
+                VStack(alignment: .leading, spacing: 16) {
+                    section("Status") {
+                        fields([
+                            ("App version", inspector.snapshot.appVersion),
+                            ("Build", inspector.snapshot.buildNumber),
+                            ("Accessibility", inspector.snapshot.accessibilityStatus),
+                            ("Keyboard hook", inspector.snapshot.keyboardHookStatus),
+                            ("Window engine", inspector.snapshot.windowEngineStatus)
+                        ])
+                    }
+
+                    section("Last Action") {
+                        fields([
+                            ("Shortcut", inspector.snapshot.lastShortcut),
+                            ("Timestamp", formatted(inspector.snapshot.lastActionTimestamp)),
+                            ("Target application", inspector.snapshot.targetApplication),
+                            ("Target window", inspector.snapshot.windowTitle),
+                            ("Result", inspector.snapshot.lastActionResult)
+                        ])
+                    }
+
+                    section("Current Window") {
+                        fields([
+                            ("Window title", inspector.snapshot.windowTitle),
+                            ("Bundle identifier", inspector.snapshot.bundleIdentifier),
+                            ("Window ID", inspector.snapshot.windowID),
+                            ("Current frame", inspector.snapshot.currentFrame),
+                            ("Target frame", inspector.snapshot.targetFrame),
+                            ("Actual frame", inspector.snapshot.actualFrame)
+                        ])
+                    }
+
+                    section("Diagnostics") {
+                        VStack(alignment: .leading, spacing: 10) {
+                            fields([("Last error", inspector.snapshot.lastError)])
+
+                            Divider()
+
+                            ForEach(inspector.events) { event in
+                                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                    Text(event.severity.rawValue)
+                                        .foregroundStyle(color(for: event.severity))
+                                    Text(event.category.rawValue)
+                                        .foregroundStyle(.secondary)
+                                    Text(event.message)
+                                    Spacer()
+                                    Text(event.timestamp, style: .time)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .font(.system(.caption, design: .monospaced))
+                            }
+                        }
+                    }
                 }
                 .padding()
             }
-            .frame(minHeight: 320)
 
             Divider()
 
-            List(diagnostics.logs) { entry in
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text("[\(entry.level.rawValue)]")
-                        .font(.system(.caption, design: .monospaced).weight(.semibold))
-                        .foregroundStyle(color(for: entry.level))
-                    Text(entry.message)
-                        .font(.system(.caption, design: .monospaced))
-                    Spacer()
-                    Text(entry.date, style: .time)
-                        .font(.caption2)
+            HStack {
+                if let message {
+                    Text(message)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+
+                Spacer()
+
+                Button("Copy Diagnostics") {
+                    copyDiagnostics()
+                }
+
+                Button("Export Report…") {
+                    exportReport()
+                }
+                .keyboardShortcut(.defaultAction)
             }
-            .frame(minHeight: 220)
+            .padding()
         }
-        .frame(minWidth: 760, minHeight: 560)
+        .frame(minWidth: 720, minHeight: 640)
         .task {
             while !Task.isCancelled {
                 refresh()
-                try? await Task.sleep(nanoseconds: DebugConfiguration.diagnosticsRefreshIntervalNanoseconds)
+                try? await Task.sleep(nanoseconds: InspectorConfiguration.refreshIntervalNanoseconds)
             }
         }
     }
 
-    private func field(_ title: String, _ value: String) -> some View {
-        Group {
-            Text(title)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.system(.caption, design: .monospaced))
-                .textSelection(.enabled)
+    private func section<Content: View>(
+        _ title: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        GroupBox(title) {
+            content()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 4)
         }
     }
 
-    private func color(for level: DeveloperLogLevel) -> Color {
-        switch level {
-        case .info:
-            return .secondary
-        case .warning:
-            return .orange
-        case .error:
-            return .red
+    private func fields(_ values: [(String, String)]) -> some View {
+        Grid(alignment: .leading, horizontalSpacing: 20, verticalSpacing: 6) {
+            ForEach(Array(values.enumerated()), id: \.offset) { _, value in
+                GridRow {
+                    Text(value.0)
+                        .foregroundStyle(.secondary)
+                    Text(value.1)
+                        .textSelection(.enabled)
+                }
+            }
+        }
+        .font(.system(.caption, design: .monospaced))
+    }
+
+    private func copyDiagnostics() {
+        let report = InspectorReport(buildInfo: .current, snapshot: inspector.snapshot, events: inspector.events)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(report.humanReadable, forType: .string)
+        message = "Diagnostics copied"
+    }
+
+    private func exportReport() {
+        let report = InspectorReport(buildInfo: .current, snapshot: inspector.snapshot, events: inspector.events)
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.zip]
+        panel.canCreateDirectories = true
+        panel.nameFieldStringValue = "OpenSnap-Report-\(String(report.reportID.uuidString.prefix(8))).zip"
+
+        guard panel.runModal() == .OK, let url = panel.url else {
+            return
+        }
+
+        do {
+            try InspectorReportExporter.export(report, to: url)
+            message = "Report exported"
+        } catch {
+            message = "Export failed: \(error.localizedDescription)"
+        }
+    }
+
+    private func formatted(_ date: Date?) -> String {
+        date.map(InspectorReport.dateString) ?? "Unavailable"
+    }
+
+    private func color(for severity: InspectorEvent.Severity) -> Color {
+        switch severity {
+        case .info: .secondary
+        case .warning: .orange
+        case .error: .red
         }
     }
 }
