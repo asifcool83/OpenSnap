@@ -7,6 +7,7 @@
 - Layout calculation foundation
 - Window Engine foundation
 - OpenSnap Inspector foundation
+- Global hotkeys for the 60% / 40% split
 - Design System v1
 - Repository governance
 

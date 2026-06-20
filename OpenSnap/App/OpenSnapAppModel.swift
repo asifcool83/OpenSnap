@@ -11,7 +11,7 @@ final class OpenSnapAppModel: ObservableObject {
     private let permissionProvider: AccessibilityPermissionProviding
     private let windowController: WindowControlling
     private var smartSnapController = SmartSnapController()
-    private var shortcutMonitor: ShortcutMonitor?
+    private var globalHotkeyService: GlobalHotkeyService?
 
     init(
         permissionProvider: AccessibilityPermissionProviding = SystemAccessibilityPermissionProvider(),
@@ -20,7 +20,7 @@ final class OpenSnapAppModel: ObservableObject {
         self.permissionProvider = permissionProvider
         self.windowController = windowController
         permissionGranted = permissionProvider.isTrusted
-        startShortcuts()
+        startGlobalHotkeys()
     }
 
     func requestAccessibilityPermission() {
@@ -82,18 +82,37 @@ final class OpenSnapAppModel: ObservableObject {
     }
     #endif
 
-    private func startShortcuts() {
-        let monitor = ShortcutMonitor { [weak self] command in
-            self?.perform(command)
+    private func startGlobalHotkeys() {
+        let service = GlobalHotkeyService { [weak self] result in
+            self?.handleGlobalHotkeyResult(result)
         }
 
-        monitor.start()
-        shortcutMonitor = monitor
+        service.start()
+        globalHotkeyService = service
         #if DEBUG || BETA
         OpenSnapInspector.shared.update { snapshot in
-            snapshot.keyboardHookStatus = monitor.isRunning ? "Active" : "Unavailable"
+            snapshot.keyboardHookStatus = service.isRunning ? "Active" : "Unavailable"
         }
         #endif
+    }
+
+    private func handleGlobalHotkeyResult(_ result: Result<WindowMutationResult, Error>) {
+        switch result {
+        case let .success(mutationResult):
+            if case let .failure(failure) = mutationResult {
+                lastErrorMessage = failure.localizedDescription
+            } else {
+                lastErrorMessage = nil
+            }
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.recordResult(mutationResult)
+            #endif
+        case let .failure(error):
+            lastErrorMessage = error.localizedDescription
+            #if DEBUG || BETA
+            OpenSnapInspector.shared.recordError(error)
+            #endif
+        }
     }
 
     private func layoutCommand(for command: ShortcutCommand) -> LayoutCommand {

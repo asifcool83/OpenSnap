@@ -18,7 +18,7 @@ The app layer owns SwiftUI views, app lifecycle, and service wiring.
 
 The accessibility layer checks and requests macOS Accessibility permission. No window layout decisions live here.
 
-System permission checks and focused-window access are exposed through injected protocols. The production adapters own `AXUIElement` creation, attribute conversion, and raw Accessibility reads and writes; orchestration depends only on app-level window geometry and operations. This boundary keeps Accessibility behavior mockable without leaking platform types into `OpenSnapCore`.
+System permission checks, focused-window access, and mouse-window access are exposed through injected protocols. The production adapters own `AXUIElement` creation, attribute conversion, hit-testing, and raw Accessibility reads and writes; orchestration depends only on app-level window geometry and operations. This boundary keeps Accessibility behavior mockable without leaking platform types into `OpenSnapCore`.
 
 ## WindowEngine
 
@@ -41,6 +41,8 @@ The layout engine is pure Swift. It accepts screen geometry and returns window g
 ## ShortcutEngine
 
 The core shortcut engine defines semantic shortcut commands. The app shortcut engine maps keyboard input to those commands.
+
+`GlobalHotkeyService` owns the event-to-command boundary. For M1.6 it registers Shift+1 and Shift+2 without polling, asks `MouseWindowResolver` for the movable and resizable window under the cursor, selects the window's screen, calculates the existing 60% or 40% layout, and passes that frame to `WindowMutationPipeline`. See [Global Hotkeys](GlobalHotkeys.md).
 
 ## Settings
 

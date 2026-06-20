@@ -8,6 +8,8 @@ public protocol AccessibilityWindowAccessing: AnyObject {
     func frame() throws -> WindowFrame
     func setPosition(_ origin: WindowPoint) throws
     func setSize(_ size: WindowSize) throws
+    func canMove() throws -> Bool
+    func canResize() throws -> Bool
 }
 
 private enum AccessibilityAttribute {
@@ -55,6 +57,14 @@ final class AXAccessibilityWindow: AccessibilityWindowAccessing {
         }
 
         try setAttribute(AccessibilityAttribute.size, value: value)
+    }
+
+    func canMove() throws -> Bool {
+        try attributeIsSettable(AccessibilityAttribute.position)
+    }
+
+    func canResize() throws -> Bool {
+        try attributeIsSettable(AccessibilityAttribute.size)
     }
 
     private func pointAttribute(_ attribute: String) throws -> WindowPoint {
@@ -112,6 +122,19 @@ final class AXAccessibilityWindow: AccessibilityWindowAccessing {
                 code: Int(result.rawValue)
             )
         }
+    }
+    private func attributeIsSettable(_ attribute: String) throws -> Bool {
+        var settable = DarwinBoolean(false)
+        let result = AXUIElementIsAttributeSettable(element, attribute as CFString, &settable)
+
+        guard result == .success else {
+            throw WindowEngineError.accessibilityReadFailed(
+                attribute: attribute,
+                code: Int(result.rawValue)
+            )
+        }
+
+        return settable.boolValue
     }
 }
 

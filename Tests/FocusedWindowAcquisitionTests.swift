@@ -102,4 +102,6 @@ private final class AcquisitionWindow: AccessibilityWindowAccessing {
     func setPosition(_ origin: WindowPoint) throws {}
 
     func setSize(_ size: WindowSize) throws {}
+    func canMove() throws -> Bool { true }
+    func canResize() throws -> Bool { true }
 }
