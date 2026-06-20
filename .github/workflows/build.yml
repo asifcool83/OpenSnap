@@ -10,6 +10,12 @@ jobs:
   build:
     name: Build OpenSnap
     runs-on: macos-latest
+    permissions:
+      contents: read
+    env:
+      DERIVED_DATA_PATH: ${{ runner.temp }}/OpenSnapDerivedData
+      APP_PATH: ${{ runner.temp }}/OpenSnapDerivedData/Build/Products/Debug/OpenSnap.app
+      ARTIFACT_PATH: ${{ runner.temp }}/OpenSnap-macOS.zip
 
     steps:
       - name: Checkout
@@ -27,6 +33,24 @@ jobs:
           -project OpenSnap.xcodeproj
           -scheme OpenSnap
           -configuration Debug
-          -derivedDataPath "$RUNNER_TEMP/OpenSnapDerivedData"
+          -derivedDataPath "$DERIVED_DATA_PATH"
           CODE_SIGNING_ALLOWED=NO
           build
+
+      - name: Run tests
+        run: swift test
+
+      - name: Verify native app
+        run: test -d "$APP_PATH"
+
+      # Signing, notarization, DMG, and release steps can be inserted after verification.
+      - name: Package native app
+        run: ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ARTIFACT_PATH"
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenSnap-macOS.zip
+          path: ${{ env.ARTIFACT_PATH }}
+          if-no-files-found: error
+          retention-days: 30

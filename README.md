@@ -68,6 +68,18 @@ xcodebuild -project OpenSnap.xcodeproj -scheme OpenSnap -configuration Debug bui
 
 The native app owns bundle identity, About, and Sparkle updates. See [`Updates/README.md`](Updates/README.md) for release publishing.
 
+## GitHub Actions Build Artifact
+
+Every successful **Build** workflow checks out the repository, builds the Swift package and native app, runs the complete test suite, verifies `OpenSnap.app`, and packages it as `OpenSnap-macOS.zip`. Tests must pass before the artifact is uploaded.
+
+To download a build:
+
+1. Open the repository's **Actions** page.
+2. Select a successful **Build** workflow run.
+3. Download `OpenSnap-macOS.zip` from the run's **Artifacts** section.
+
+Artifacts are retained for 30 days. The application is currently unsigned and intended for testing; code signing, notarization, DMG packaging, and GitHub Releases are future release-pipeline stages.
+
 OpenSnap targets macOS 27 or newer.
 
 ## Project Structure
