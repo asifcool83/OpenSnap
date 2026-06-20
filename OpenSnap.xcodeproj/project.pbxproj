@@ -12,12 +12,10 @@
 		A00000000000000000000004 /* OpenSnapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000004 /* OpenSnapApp.swift */; };
 		A00000000000000000000005 /* OpenSnapAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000005 /* OpenSnapAppModel.swift */; };
 		A00000000000000000000006 /* OpenSnapMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000006 /* OpenSnapMenuView.swift */; };
-		A00000000000000000000007 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000007 /* SettingsView.swift */; };
 		A00000000000000000000008 /* DebugConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000008 /* DebugConfiguration.swift */; };
 		A00000000000000000000009 /* DeveloperDiagnosticsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000009 /* DeveloperDiagnosticsCenter.swift */; };
 		A0000000000000000000000A /* DeveloperDiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000A /* DeveloperDiagnosticsView.swift */; };
 		A0000000000000000000000B /* DeveloperFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000B /* DeveloperFormatting.swift */; };
-		A0000000000000000000000C /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000C /* AppSettings.swift */; };
 		A0000000000000000000000D /* DefaultShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000D /* DefaultShortcuts.swift */; };
 		A0000000000000000000000E /* KeyboardShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000E /* KeyboardShortcut.swift */; };
 		A0000000000000000000000F /* ShortcutMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000F /* ShortcutMonitor.swift */; };
@@ -31,12 +29,13 @@
 		A00000000000000000000017 /* WindowMutationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* WindowMutationResult.swift */; };
 		A00000000000000000000018 /* OpenSnapCore in Frameworks */ = {isa = PBXBuildFile; productRef = E00000000000000000000001 /* OpenSnapCore */; };
 		A00000000000000000000019 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* BuildInfo.swift */; };
-		A0000000000000000000001A /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001B /* AboutView.swift */; };
 		A0000000000000000000001B /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = E00000000000000000000003 /* Sparkle */; };
 		A0000000000000000000001C /* OpenSnapUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001C /* OpenSnapUpdater.swift */; };
 		A0000000000000000000001D /* InspectorReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001D /* InspectorReport.swift */; };
 		A0000000000000000000001E /* MouseWindowResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001E /* MouseWindowResolver.swift */; };
 		A0000000000000000000001F /* GlobalHotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001F /* GlobalHotkeyService.swift */; };
+		A00000000000000000000020 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000020 /* MenuBarController.swift */; };
+		A00000000000000000000021 /* DiagnosticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000021 /* DiagnosticsService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,12 +45,10 @@
 		B00000000000000000000004 /* OpenSnapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapApp.swift; sourceTree = SOURCE_ROOT; };
 		B00000000000000000000005 /* OpenSnapAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapAppModel.swift; sourceTree = SOURCE_ROOT; };
 		B00000000000000000000006 /* OpenSnapMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapMenuView.swift; sourceTree = SOURCE_ROOT; };
-		B00000000000000000000007 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/SettingsView.swift; sourceTree = SOURCE_ROOT; };
 		B00000000000000000000008 /* DebugConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DebugConfiguration.swift; sourceTree = SOURCE_ROOT; };
 		B00000000000000000000009 /* DeveloperDiagnosticsCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DeveloperDiagnosticsCenter.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000000A /* DeveloperDiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DeveloperDiagnosticsView.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000000B /* DeveloperFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DeveloperFormatting.swift; sourceTree = SOURCE_ROOT; };
-		B0000000000000000000000C /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Settings/AppSettings.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000000D /* DefaultShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/ShortcutEngine/DefaultShortcuts.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000000E /* KeyboardShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/ShortcutEngine/KeyboardShortcut.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000000F /* ShortcutMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/ShortcutEngine/ShortcutMonitor.swift; sourceTree = SOURCE_ROOT; };
@@ -66,11 +63,12 @@
 		B00000000000000000000018 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Configuration/Info.plist; sourceTree = SOURCE_ROOT; };
 		B00000000000000000000019 /* OpenSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0000000000000000000001A /* BuildInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/BuildInfo.swift; sourceTree = SOURCE_ROOT; };
-		B0000000000000000000001B /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/AboutView.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000001C /* OpenSnapUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/OpenSnapUpdater.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000001D /* InspectorReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/InspectorReport.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000001E /* MouseWindowResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Accessibility/MouseWindowResolver.swift; sourceTree = SOURCE_ROOT; };
 		B0000000000000000000001F /* GlobalHotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/ShortcutEngine/GlobalHotkeyService.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000020 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/App/MenuBarController.swift; sourceTree = SOURCE_ROOT; };
+		B00000000000000000000021 /* DiagnosticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSnap/Diagnostics/DiagnosticsService.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +77,7 @@
 
 /* Begin PBXGroup section */
 		C00000000000000000000002 = {isa = PBXGroup; children = (C00000000000000000000003 /* OpenSnap */, B00000000000000000000018 /* Info.plist */, C00000000000000000000004 /* Products */,); sourceTree = "<group>"; };
-		C00000000000000000000003 /* OpenSnap */ = {isa = PBXGroup; children = (B0000000000000000000001A, B0000000000000000000001B, B00000000000000000000001, B00000000000000000000002, B00000000000000000000003, B0000000000000000000001E, B00000000000000000000004, B00000000000000000000005, B00000000000000000000006, B00000000000000000000007, B00000000000000000000008, B00000000000000000000009, B0000000000000000000000A, B0000000000000000000000B, B0000000000000000000000C, B0000000000000000000000D, B0000000000000000000000E, B0000000000000000000000F, B0000000000000000000001F, B00000000000000000000010, B00000000000000000000011, B00000000000000000000012, B00000000000000000000013, B00000000000000000000014, B00000000000000000000015, B00000000000000000000016, B00000000000000000000017,); name = OpenSnap; sourceTree = "<group>"; };
+		C00000000000000000000003 /* OpenSnap */ = {isa = PBXGroup; children = (B0000000000000000000001A, B00000000000000000000020, B00000000000000000000001, B00000000000000000000002, B00000000000000000000003, B0000000000000000000001E, B00000000000000000000004, B00000000000000000000005, B00000000000000000000006, B00000000000000000000008, B00000000000000000000009, B0000000000000000000000A, B0000000000000000000000B, B00000000000000000000021, B0000000000000000000000D, B0000000000000000000000E, B0000000000000000000000F, B0000000000000000000001F, B00000000000000000000010, B00000000000000000000011, B00000000000000000000012, B00000000000000000000013, B00000000000000000000014, B00000000000000000000015, B00000000000000000000016, B00000000000000000000017,); name = OpenSnap; sourceTree = "<group>"; };
 		C00000000000000000000004 /* Products */ = {isa = PBXGroup; children = (B00000000000000000000019 /* OpenSnap.app */,); name = Products; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
@@ -96,7 +94,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D00000000000000000000003 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000019, A0000000000000000000001A, A0000000000000000000001C, A0000000000000000000001D, A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A0000000000000000000001E, A00000000000000000000004, A00000000000000000000005, A00000000000000000000006, A00000000000000000000007, A00000000000000000000008, A00000000000000000000009, A0000000000000000000000A, A0000000000000000000000B, A0000000000000000000000C, A0000000000000000000000D, A0000000000000000000000E, A0000000000000000000000F, A0000000000000000000001F, A00000000000000000000010, A00000000000000000000011, A00000000000000000000012, A00000000000000000000013, A00000000000000000000014, A00000000000000000000015, A00000000000000000000016, A00000000000000000000017,); runOnlyForDeploymentPostprocessing = 0; };
+		D00000000000000000000003 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000019, A00000000000000000000020, A0000000000000000000001C, A0000000000000000000001D, A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A0000000000000000000001E, A00000000000000000000004, A00000000000000000000005, A00000000000000000000006, A00000000000000000000008, A00000000000000000000009, A0000000000000000000000A, A0000000000000000000000B, A00000000000000000000021, A0000000000000000000000D, A0000000000000000000000E, A0000000000000000000000F, A0000000000000000000001F, A00000000000000000000010, A00000000000000000000011, A00000000000000000000012, A00000000000000000000013, A00000000000000000000014, A00000000000000000000015, A00000000000000000000016, A00000000000000000000017,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
