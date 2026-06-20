@@ -12,7 +12,9 @@ OpenSnap keeps window management behavior split into small, testable areas.
 
 ## App
 
-The app layer owns SwiftUI views, app lifecycle, and service wiring.
+The app layer owns lifecycle and service wiring. `OpenSnapApp` exposes one native `MenuBarExtra` scene and starts background services; it defines no main window or Settings scene.
+
+Menu actions flow through `MenuBarController`, which delegates status and report content to `OpenSnapDiagnosticsService`. Clipboard, native About-panel, and application-termination adapters are injected at the controller boundary. No window layout or snapping decisions live in the menu layer. See [Menu Bar App](MenuBarApp.md).
 
 ## Accessibility
 
@@ -46,7 +48,7 @@ The core shortcut engine defines semantic shortcut commands. The app shortcut en
 
 ## Settings
 
-Settings stores user-configurable preferences and default shortcuts.
+Settings and preference persistence are intentionally deferred to v0.7.0-beta. M1.7 has no preferences or onboarding.
 
 ## Utilities
 
@@ -60,4 +62,4 @@ Sparkle checks the repository-hosted appcast and downloads signed archives from 
 
 ## Inspector
 
-Diagnostic UI lives in the app target. OpenSnap Inspector ships in Debug and Beta builds to support external testing. Production Release builds may later reduce or disable advanced diagnostics.
+Structured diagnostic state lives in the app target and remains local. `OpenSnapDiagnosticsService` reuses the existing Inspector snapshot and report formatter to produce the menu bar's plain-text clipboard report. M1.7 exposes no Inspector window.

@@ -47,6 +47,10 @@ Right Smart Snap follows the same cycle while anchoring the window to the right 
 
 The target window must be movable and resizable. See [`Documentation/GlobalHotkeys.md`](Documentation/GlobalHotkeys.md) for the dispatch architecture and failure boundaries.
 
+## Menu Bar App
+
+OpenSnap runs without a Dock icon or main window. Its native menu bar menu shows Accessibility status and provides Copy Diagnostic Report, About, and Quit. See [`Documentation/MenuBarApp.md`](Documentation/MenuBarApp.md).
+
 ## Development
 
 Build and test with Swift Package Manager:
@@ -78,13 +82,12 @@ OpenSnap/
   Accessibility/
   ShortcutEngine/
   WindowEngine/
-  Settings/
   Utilities/
   Resources/
 Tests/
 Documentation/
 ```
 
-`OpenSnapCore` contains pure logic and app-independent models. `OpenSnap` contains SwiftUI, AppKit, Accessibility, and other macOS integration wiring.
+`OpenSnapCore` contains pure logic and app-independent models. `OpenSnap` contains the menu bar app, AppKit, Accessibility, and other macOS integration wiring.
 
 Each folder has a single responsibility, and layout algorithms are intentionally separated from AppKit so they can be tested without launching the UI.

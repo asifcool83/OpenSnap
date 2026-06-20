@@ -8,6 +8,7 @@
 - Window Engine foundation
 - OpenSnap Inspector foundation
 - Global hotkeys for the 60% / 40% split
+- Native menu bar app and local diagnostic report
 - Design System v1
 - Repository governance
 

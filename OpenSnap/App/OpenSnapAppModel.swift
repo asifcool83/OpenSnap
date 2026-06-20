@@ -1,86 +1,12 @@
 import Foundation
-import OpenSnapCore
 
 @MainActor
 final class OpenSnapAppModel: ObservableObject {
-    let settings = AppSettings()
-
-    @Published private(set) var permissionGranted: Bool
-    @Published var lastErrorMessage: String?
-
-    private let permissionProvider: AccessibilityPermissionProviding
-    private let windowController: WindowControlling
-    private var smartSnapController = SmartSnapController()
     private var globalHotkeyService: GlobalHotkeyService?
 
-    init(
-        permissionProvider: AccessibilityPermissionProviding = SystemAccessibilityPermissionProvider(),
-        windowController: WindowControlling = AccessibilityWindowController()
-    ) {
-        self.permissionProvider = permissionProvider
-        self.windowController = windowController
-        permissionGranted = permissionProvider.isTrusted
+    init() {
         startGlobalHotkeys()
     }
-
-    func requestAccessibilityPermission() {
-        permissionGranted = permissionProvider.requestIfNeeded()
-        #if DEBUG || BETA
-        if permissionGranted {
-            OpenSnapInspector.shared.update { snapshot in
-                snapshot.accessibilityStatus = "Granted"
-            }
-        } else {
-            OpenSnapInspector.shared.recordAccessibilityMissing()
-        }
-        #endif
-    }
-
-    func perform(_ command: ShortcutCommand) {
-        do {
-            let layoutCommand = layoutCommand(for: command)
-            #if DEBUG || BETA
-            OpenSnapInspector.shared.recordShortcut(layoutCommand)
-            #endif
-            let result = try windowController.perform(.layout(layoutCommand))
-
-            if case let .failure(failure) = result {
-                lastErrorMessage = failure.localizedDescription
-                #if DEBUG || BETA
-                OpenSnapInspector.shared.recordResult(result)
-                #endif
-                return
-            }
-
-            lastErrorMessage = nil
-            #if DEBUG || BETA
-            OpenSnapInspector.shared.recordResult(result)
-            OpenSnapInspector.shared.update { snapshot in
-                snapshot.lastError = "None"
-            }
-            #endif
-        } catch {
-            lastErrorMessage = error.localizedDescription
-            #if DEBUG || BETA
-            OpenSnapInspector.shared.recordError(error)
-            #endif
-        }
-    }
-
-    #if DEBUG || BETA
-    func refreshInspector() {
-        do {
-            _ = try windowController.focusedWindowFrame()
-            lastErrorMessage = nil
-        } catch WindowEngineError.accessibilityPermissionRequired {
-            OpenSnapInspector.shared.recordAccessibilityMissing(recordEvent: false)
-        } catch {
-            OpenSnapInspector.shared.update { snapshot in
-                snapshot.lastError = error.localizedDescription
-            }
-        }
-    }
-    #endif
 
     private func startGlobalHotkeys() {
         let service = GlobalHotkeyService { [weak self] result in
@@ -99,40 +25,13 @@ final class OpenSnapAppModel: ObservableObject {
     private func handleGlobalHotkeyResult(_ result: Result<WindowMutationResult, Error>) {
         switch result {
         case let .success(mutationResult):
-            if case let .failure(failure) = mutationResult {
-                lastErrorMessage = failure.localizedDescription
-            } else {
-                lastErrorMessage = nil
-            }
             #if DEBUG || BETA
             OpenSnapInspector.shared.recordResult(mutationResult)
             #endif
         case let .failure(error):
-            lastErrorMessage = error.localizedDescription
             #if DEBUG || BETA
             OpenSnapInspector.shared.recordError(error)
             #endif
-        }
-    }
-
-    private func layoutCommand(for command: ShortcutCommand) -> LayoutCommand {
-        switch command {
-        case let .layout(layoutCommand):
-            smartSnapController.reset()
-            #if DEBUG || BETA
-            OpenSnapInspector.shared.update { snapshot in
-                snapshot.currentSmartSnapState = "Reset"
-            }
-            #endif
-            return layoutCommand
-        case let .smartSnap(side):
-            let step = smartSnapController.nextStep(for: side)
-            #if DEBUG || BETA
-            OpenSnapInspector.shared.update { snapshot in
-                snapshot.currentSmartSnapState = "\(side) \(Int(step.ratio * 100))%"
-            }
-            #endif
-            return .smartSnap(side, step)
         }
     }
 }
