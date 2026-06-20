@@ -40,6 +40,13 @@ Left Smart Snap:
 
 Right Smart Snap follows the same cycle while anchoring the window to the right edge.
 
+## Global Shortcuts
+
+- Shift+1: snap the window under the mouse to the left 60%.
+- Shift+2: snap the window under the mouse to the right 40%.
+
+The target window must be movable and resizable. See [`Documentation/GlobalHotkeys.md`](Documentation/GlobalHotkeys.md) for the dispatch architecture and failure boundaries.
+
 ## Development
 
 Build and test with Swift Package Manager:

@@ -239,6 +239,9 @@ private final class MutationWindow: AccessibilityWindowAccessing {
             throw resizeError
         }
     }
+
+    func canMove() throws -> Bool { true }
+    func canResize() throws -> Bool { true }
 }
 
 private enum MutationTestError: LocalizedError {

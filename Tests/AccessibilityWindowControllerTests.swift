@@ -294,6 +294,9 @@ private final class WindowAdapter: AccessibilityWindowAccessing {
             height: size.height
         )
     }
+
+    func canMove() throws -> Bool { true }
+    func canResize() throws -> Bool { true }
 }
 
 private struct ScreenFrameProvider: ScreenFrameProviding {
