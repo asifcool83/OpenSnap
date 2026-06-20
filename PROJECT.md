@@ -31,3 +31,11 @@ OpenSnap will not become:
 ## Project Culture
 
 Quality matters more than speed. Simplicity matters more than feature count. Reliability matters more than cleverness.
+
+## Continuous Integration Artifacts
+
+GitHub Actions preserves existing build and test gates in one sequential **Build** workflow. A run must successfully build the Swift package and native macOS app, pass the complete test suite, and verify the generated `OpenSnap.app` before packaging or upload begins.
+
+Successful runs package the application as `OpenSnap-macOS.zip` and expose it in the workflow run's **Artifacts** section for 30 days. Anyone with access to the Actions run can download the artifact without Xcode.
+
+The artifact is currently unsigned. The workflow keeps verification, packaging, and upload as separate stages so code signing, Hardened Runtime, notarization, DMG packaging, and GitHub Releases can be added later without restructuring the build and test gates.
