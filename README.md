@@ -49,7 +49,7 @@ The target window must be movable and resizable. See [`Documentation/GlobalHotke
 
 ## Menu Bar App
 
-OpenSnap runs without a Dock icon or main window. Its native menu bar menu shows Accessibility status and provides Copy Diagnostic Report, About, and Quit. See [`Documentation/MenuBarApp.md`](Documentation/MenuBarApp.md).
+OpenSnap runs without a Dock icon or permanent main window. On first launch, a compact welcome window explains the two shortcuts and guides users through Accessibility and Input Monitoring permission. Its menu bar menu shows readiness, shortcut reference, recovery guidance, Settings, diagnostics, About, and Quit. See [`Documentation/FirstUserExperience.md`](Documentation/FirstUserExperience.md).
 
 ## Development
 

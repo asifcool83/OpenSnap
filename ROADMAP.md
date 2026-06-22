@@ -16,6 +16,9 @@
 
 ## v0.2.0-alpha
 
+- Native first-launch welcome and permission guidance
+- Focused Settings window for permissions and shortcut reference
+- Menu-bar readiness and recovery messaging
 - Manual Window Engine QA across common macOS apps
 - Accessibility edge-case handling
 - Improved error recovery and diagnostics
@@ -43,9 +46,8 @@
 
 ## v0.7.0-beta
 
-- Settings UI
-- Preference persistence
-- Accessibility copy and onboarding polish
+- Shortcut customization and preference persistence
+- Localization and onboarding accessibility polish
 
 ## v0.8.0-beta
 

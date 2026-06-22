@@ -4,6 +4,12 @@ All notable changes to OpenSnap will be documented in this file.
 
 ## Unreleased
 
+- Added a native first-launch welcome window that explains OpenSnap in one sentence and guides users through Accessibility and Input Monitoring permission.
+- Added explicit permission requests, direct System Settings recovery links, automatic status refresh, and privacy-focused copy.
+- Added a focused Settings window containing only permission health and the two fixed shortcuts.
+- Improved the menu bar with Ready/Finish Setup status, shortcut reference, first-run reopening, and actionable last-snap recovery messages.
+- Persisted only onboarding completion; no usage, window, application, or shortcut-history data is stored.
+
 - Created the initial Swift 6 macOS project scaffold.
 - Split the package into `OpenSnapCore` for pure logic and `OpenSnap` for app/system integration.
 - Added a native SwiftUI menu-bar app with Accessibility status, local diagnostics, About, and Quit.

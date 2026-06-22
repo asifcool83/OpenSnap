@@ -12,36 +12,55 @@ protocol AboutPresenting {
     func showAbout(buildInfo: BuildInfo)
 }
 
+@MainActor
+protocol ErrorPresenting {
+    func showClipboardFailure()
+}
+
 /// Owns menu actions while delegating all report content to DiagnosticsService.
 @MainActor
 final class MenuBarController: ObservableObject {
-    @Published private(set) var accessibilityStatus: AccessibilityMenuStatus
+    @Published private(set) var permissions: PermissionSnapshot
+    @Published private(set) var latestSnapActivity: SnapActivity?
+
+    var readiness: MenuBarReadiness {
+        permissions.isReady ? .ready : .setupRequired
+    }
 
     private let diagnosticsService: any DiagnosticsServicing
     private let clipboard: any ClipboardWriting
     private let aboutPresenter: any AboutPresenting
+    private let errorPresenter: any ErrorPresenting
     private let terminate: () -> Void
 
     init(
         diagnosticsService: any DiagnosticsServicing = OpenSnapDiagnosticsService(),
         clipboard: any ClipboardWriting = SystemClipboard(),
         aboutPresenter: any AboutPresenting = SystemAboutPresenter(),
+        errorPresenter: any ErrorPresenting = SystemErrorPresenter(),
         terminate: @escaping () -> Void = { NSApplication.shared.terminate(nil) }
     ) {
         self.diagnosticsService = diagnosticsService
         self.clipboard = clipboard
         self.aboutPresenter = aboutPresenter
+        self.errorPresenter = errorPresenter
         self.terminate = terminate
-        accessibilityStatus = diagnosticsService.accessibilityStatus()
+        permissions = diagnosticsService.permissionSnapshot()
+        latestSnapActivity = diagnosticsService.latestSnapActivity()
     }
 
-    func refreshAccessibilityStatus() {
-        accessibilityStatus = diagnosticsService.accessibilityStatus()
+    func refreshPermissions() {
+        permissions = diagnosticsService.permissionSnapshot()
+        latestSnapActivity = diagnosticsService.latestSnapActivity()
     }
 
     @discardableResult
     func copyDiagnosticReport() -> Bool {
-        clipboard.write(diagnosticsService.diagnosticReport())
+        let didCopy = clipboard.write(diagnosticsService.diagnosticReport())
+        if !didCopy {
+            errorPresenter.showClipboardFailure()
+        }
+        return didCopy
     }
 
     func showAbout() {
@@ -50,6 +69,19 @@ final class MenuBarController: ObservableObject {
 
     func quit() {
         terminate()
+    }
+}
+
+@MainActor
+private struct SystemErrorPresenter: ErrorPresenting {
+    func showClipboardFailure() {
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "Couldn’t Copy Diagnostic Report"
+        alert.informativeText = "OpenSnap couldn’t access the clipboard. Try again."
+        alert.addButton(withTitle: "OK")
+        NSApplication.shared.activate()
+        alert.runModal()
     }
 }
 

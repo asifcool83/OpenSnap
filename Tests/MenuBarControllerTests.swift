@@ -4,18 +4,28 @@ import Testing
 
 @MainActor
 struct MenuBarControllerTests {
-    @Test func initializesAndRefreshesAccessibilityStatusFromDiagnosticsService() {
-        let diagnostics = MenuDiagnosticsService(status: .permissionRequired)
+    @Test func initializesAndRefreshesPermissionStatusFromDiagnosticsService() {
+        let diagnostics = MenuDiagnosticsService(
+            permissions: PermissionSnapshot(
+                accessibilityGranted: false,
+                inputMonitoringGranted: false
+            )
+        )
         let controller = makeController(diagnostics: diagnostics)
 
-        #expect(controller.accessibilityStatus == .permissionRequired)
-        #expect(diagnostics.statusCallCount == 1)
+        #expect(controller.permissions.accessibilityGranted == false)
+        #expect(controller.readiness == .setupRequired)
+        #expect(diagnostics.permissionCallCount == 1)
 
-        diagnostics.status = .granted
-        controller.refreshAccessibilityStatus()
+        diagnostics.permissions = PermissionSnapshot(
+            accessibilityGranted: true,
+            inputMonitoringGranted: true
+        )
+        controller.refreshPermissions()
 
-        #expect(controller.accessibilityStatus == .granted)
-        #expect(diagnostics.statusCallCount == 2)
+        #expect(controller.permissions.isReady)
+        #expect(controller.readiness == .ready)
+        #expect(diagnostics.permissionCallCount == 2)
     }
 
     @Test func copyDiagnosticReportWritesExactPlainTextToClipboard() {
@@ -32,10 +42,12 @@ struct MenuBarControllerTests {
 
     @Test func copyDiagnosticReportReturnsClipboardFailure() {
         let clipboard = MenuClipboard(writeResult: false)
-        let controller = makeController(clipboard: clipboard)
+        let errors = MenuErrorPresenter()
+        let controller = makeController(clipboard: clipboard, errors: errors)
 
         #expect(!controller.copyDiagnosticReport())
         #expect(clipboard.writtenTexts.count == 1)
+        #expect(errors.clipboardFailureCount == 1)
     }
 
     @Test func aboutReceivesVersionBuildAndGitIdentity() {
@@ -69,24 +81,42 @@ struct MenuBarControllerTests {
         #expect(terminateCallCount == 1)
     }
 
-    @Test func accessibilityLabelsAreExplicit() {
-        #expect(AccessibilityMenuStatus.granted.title == "Accessibility: Granted")
-        #expect(
-            AccessibilityMenuStatus.permissionRequired.title
-                == "Accessibility: Permission Required"
+    @Test func readinessCopyExplainsBothReadyAndRecoveryStates() {
+        #expect(MenuBarReadiness.ready.title == "OpenSnap is Ready")
+        #expect(MenuBarReadiness.ready.detail.contains("Point to the window"))
+        #expect(MenuBarReadiness.setupRequired.title == "Finish Setting Up OpenSnap")
+        #expect(MenuBarReadiness.setupRequired.detail.contains("macOS permissions"))
+    }
+
+    @Test func refreshIncludesLatestSnapRecoveryMessage() {
+        let activity = SnapActivity(
+            kind: .failure,
+            title: "Last snap didn’t work",
+            detail: "Try another window."
         )
+        let diagnostics = MenuDiagnosticsService(activity: activity)
+        let controller = makeController(diagnostics: diagnostics)
+
+        #expect(controller.latestSnapActivity == activity)
+
+        diagnostics.activity = nil
+        controller.refreshPermissions()
+
+        #expect(controller.latestSnapActivity == nil)
     }
 
     private func makeController(
         diagnostics: MenuDiagnosticsService = MenuDiagnosticsService(),
         clipboard: MenuClipboard = MenuClipboard(),
         about: MenuAboutPresenter = MenuAboutPresenter(),
+        errors: MenuErrorPresenter = MenuErrorPresenter(),
         terminate: @escaping () -> Void = {}
     ) -> MenuBarController {
         MenuBarController(
             diagnosticsService: diagnostics,
             clipboard: clipboard,
             aboutPresenter: about,
+            errorPresenter: errors,
             terminate: terminate
         )
     }
@@ -108,9 +138,10 @@ struct MenuBarControllerTests {
 @MainActor
 private final class MenuDiagnosticsService: DiagnosticsServicing {
     var buildInfo: BuildInfo
-    var status: AccessibilityMenuStatus
+    var permissions: PermissionSnapshot
     var report: String
-    private(set) var statusCallCount = 0
+    var activity: SnapActivity?
+    private(set) var permissionCallCount = 0
     private(set) var reportCallCount = 0
 
     init(
@@ -119,18 +150,25 @@ private final class MenuDiagnosticsService: DiagnosticsServicing {
             macOSVersion: "macOS Test",
             cpuArchitecture: "arm64"
         ),
-        status: AccessibilityMenuStatus = .granted,
+        permissions: PermissionSnapshot = PermissionSnapshot(
+            accessibilityGranted: true,
+            inputMonitoringGranted: true
+        ),
+        activity: SnapActivity? = nil,
         report: String = "report"
     ) {
         self.buildInfo = buildInfo
-        self.status = status
+        self.permissions = permissions
+        self.activity = activity
         self.report = report
     }
 
-    func accessibilityStatus() -> AccessibilityMenuStatus {
-        statusCallCount += 1
-        return status
+    func permissionSnapshot() -> PermissionSnapshot {
+        permissionCallCount += 1
+        return permissions
     }
+
+    func latestSnapActivity() -> SnapActivity? { activity }
 
     func diagnosticReport() -> String {
         reportCallCount += 1
@@ -159,5 +197,14 @@ private final class MenuAboutPresenter: AboutPresenting {
 
     func showAbout(buildInfo: BuildInfo) {
         presentedBuildInfo.append(buildInfo)
+    }
+}
+
+@MainActor
+private final class MenuErrorPresenter: ErrorPresenting {
+    private(set) var clipboardFailureCount = 0
+
+    func showClipboardFailure() {
+        clipboardFailureCount += 1
     }
 }
