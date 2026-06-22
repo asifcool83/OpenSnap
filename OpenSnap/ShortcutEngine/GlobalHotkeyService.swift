@@ -13,7 +13,7 @@ extension ShortcutMonitor: ShortcutMonitoring {}
 /// Resolves and snaps the window under the mouse when a registered global shortcut fires.
 @MainActor
 public final class GlobalHotkeyService {
-    public typealias ResultHandler = (Result<WindowMutationResult, Error>) -> Void
+    public typealias ResultHandler = (ShortcutCommand, Result<WindowMutationResult, Error>) -> Void
 
     private let mouseWindowResolver: any MouseWindowResolving
     private let screenFrameProvider: any ScreenFrameProviding
@@ -33,7 +33,7 @@ public final class GlobalHotkeyService {
         screenFrameProvider: any ScreenFrameProviding = AppKitScreenFrameProvider(),
         screenFrameResolver: ScreenFrameResolver = ScreenFrameResolver(),
         layoutCalculator: LayoutCalculator = LayoutCalculator(),
-        resultHandler: @escaping ResultHandler = { _ in }
+        resultHandler: @escaping ResultHandler = { _, _ in }
     ) {
         self.mouseWindowResolver = mouseWindowResolver
         self.screenFrameProvider = screenFrameProvider
@@ -51,7 +51,7 @@ public final class GlobalHotkeyService {
         layoutCalculator: LayoutCalculator = LayoutCalculator(),
         mutationPipeline: WindowMutationPipeline = WindowMutationPipeline(),
         monitorFactory: @escaping (@escaping (ShortcutCommand) -> Void) -> any ShortcutMonitoring,
-        resultHandler: @escaping ResultHandler = { _ in }
+        resultHandler: @escaping ResultHandler = { _, _ in }
     ) {
         self.mouseWindowResolver = mouseWindowResolver
         self.screenFrameProvider = screenFrameProvider
@@ -93,9 +93,9 @@ public final class GlobalHotkeyService {
 
     private func handle(_ command: ShortcutCommand) {
         do {
-            resultHandler(.success(try dispatch(command)))
+            resultHandler(command, .success(try dispatch(command)))
         } catch {
-            resultHandler(.failure(error))
+            resultHandler(command, .failure(error))
         }
     }
 

@@ -85,11 +85,11 @@ public struct WindowMutationFailure: LocalizedError, Equatable, Sendable {
         case .validation:
             return "OpenSnap received an invalid window frame."
         case .resize:
-            return "OpenSnap could not resize the focused window."
+            return "OpenSnap could not resize the window."
         case .position:
-            return "OpenSnap could not move the focused window."
+            return "OpenSnap could not move the window."
         case .readBack:
-            return "OpenSnap could not verify the focused window frame."
+            return "OpenSnap could not verify the window frame."
         }
     }
 }

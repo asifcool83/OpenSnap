@@ -15,8 +15,8 @@ The project is designed to be lightweight, fast, privacy-respecting, keyboard-fi
 ## Version 1.0 Scope
 
 - Accessibility permissions
-- Detect active window
-- Move and resize the active window
+- Detect target windows
+- Move and resize the window under the mouse
 - Left 60%
 - Right 40%
 - Left half
@@ -63,14 +63,14 @@ swift test
 Build the native application target used for beta distribution and releases:
 
 ```sh
-xcodebuild -project OpenSnap.xcodeproj -scheme OpenSnap -configuration Debug build
+xcodebuild -project OpenSnap.xcodeproj -scheme OpenSnap -configuration Beta build
 ```
 
-The native app owns bundle identity, About, and Sparkle updates. See [`Updates/README.md`](Updates/README.md) for release publishing.
+The native app owns bundle identity and About information. Automatic updates are intentionally deferred until the signed release pipeline exists; see [`Updates/README.md`](Updates/README.md).
 
 ## GitHub Actions Build Artifact
 
-Every successful **Build** workflow checks out the repository, builds the Swift package and native app, runs the complete test suite, verifies `OpenSnap.app`, and packages it as `OpenSnap-macOS.zip`. Tests must pass before the artifact is uploaded.
+Every successful **Build** workflow checks out the repository, builds the Swift package and optimized Beta app, runs the complete test suite, verifies the executable and embedded build identity, and packages it as `OpenSnap-macOS.zip`. Tests must pass before the artifact is uploaded.
 
 To download a build:
 
@@ -80,7 +80,7 @@ To download a build:
 
 Artifacts are retained for 30 days. The application is currently unsigned and intended for testing; code signing, notarization, DMG packaging, and GitHub Releases are future release-pipeline stages.
 
-OpenSnap targets macOS 27 or newer.
+OpenSnap targets macOS 15 or newer.
 
 ## Project Structure
 
@@ -94,7 +94,6 @@ OpenSnap/
   Accessibility/
   ShortcutEngine/
   WindowEngine/
-  Utilities/
   Resources/
 Tests/
 Documentation/
@@ -103,3 +102,5 @@ Documentation/
 `OpenSnapCore` contains pure logic and app-independent models. `OpenSnap` contains the menu bar app, AppKit, Accessibility, and other macOS integration wiring.
 
 Each folder has a single responsibility, and layout algorithms are intentionally separated from AppKit so they can be tested without launching the UI.
+
+The current release-readiness assessment and deferred work are documented in [`Documentation/ReleaseReadiness.md`](Documentation/ReleaseReadiness.md).

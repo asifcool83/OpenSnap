@@ -2,6 +2,7 @@ import ApplicationServices
 import Foundation
 
 public enum MouseWindowResolutionError: LocalizedError, Equatable, Sendable {
+    case cursorLocationUnavailable
     case hitTestFailed(code: Int)
     case windowUnavailable
     case windowNotMovable
@@ -9,6 +10,8 @@ public enum MouseWindowResolutionError: LocalizedError, Equatable, Sendable {
 
     public var errorDescription: String? {
         switch self {
+        case .cursorLocationUnavailable:
+            return "OpenSnap could not determine the mouse location."
         case let .hitTestFailed(code):
             return "OpenSnap could not inspect the window under the mouse. AXError \(code)."
         case .windowUnavailable:
@@ -59,9 +62,17 @@ protocol MouseWindowTargetReading {
 }
 
 @MainActor
-private struct AXMouseWindowTargetReader: MouseWindowTargetReading {
+struct AXMouseWindowTargetReader: MouseWindowTargetReading {
+    private let cursorLocation: () -> CGPoint?
+
+    init(cursorLocation: @escaping () -> CGPoint? = { CGEvent(source: nil)?.location }) {
+        self.cursorLocation = cursorLocation
+    }
+
     func windowUnderMouse() throws -> any AccessibilityWindowAccessing {
-        let location = CGEvent(source: nil)?.location ?? .zero
+        guard let location = cursorLocation() else {
+            throw MouseWindowResolutionError.cursorLocationUnavailable
+        }
         let systemWideElement = AXUIElementCreateSystemWide()
         var hitElement: AXUIElement?
         let result = AXUIElementCopyElementAtPosition(

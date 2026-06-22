@@ -9,12 +9,14 @@ on:
 jobs:
   build:
     name: Build OpenSnap
-    runs-on: macos-latest
+    runs-on: macos-15
     permissions:
       contents: read
     env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
       DERIVED_DATA_PATH: build/OpenSnapDerivedData
-      APP_PATH: build/OpenSnapDerivedData/Build/Products/Debug/OpenSnap.app
+      BUILD_CONFIGURATION: Beta
+      APP_PATH: build/OpenSnapDerivedData/Build/Products/Beta/OpenSnap.app
       ARTIFACT_PATH: artifacts/OpenSnap-macOS.zip
 
     steps:
@@ -32,22 +34,31 @@ jobs:
           xcodebuild
           -project OpenSnap.xcodeproj
           -scheme OpenSnap
-          -configuration Debug
+          -configuration "$BUILD_CONFIGURATION"
           -derivedDataPath "$DERIVED_DATA_PATH"
           CODE_SIGNING_ALLOWED=NO
+          CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER"
+          OPEN_SNAP_GIT_COMMIT="$GITHUB_SHA"
+          OPEN_SNAP_GIT_BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          SWIFT_TREAT_WARNINGS_AS_ERRORS=YES
           build
 
       - name: Run tests
         run: swift test
 
       - name: Verify native app
-        run: test -d "$APP_PATH"
+        run: |
+          test -d "$APP_PATH"
+          test -x "$APP_PATH/Contents/MacOS/OpenSnap"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Contents/Info.plist")" = "$GITHUB_RUN_NUMBER"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :OpenSnapGitCommit' "$APP_PATH/Contents/Info.plist")" = "$GITHUB_SHA"
 
       # Signing, notarization, DMG, and release steps can be inserted after verification.
       - name: Package native app
         run: |
           mkdir -p artifacts
           ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ARTIFACT_PATH"
+          unzip -t "$ARTIFACT_PATH"
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v7

@@ -1,4 +1,5 @@
 import Foundation
+import OpenSnapCore
 
 @MainActor
 final class OpenSnapAppModel: ObservableObject {
@@ -9,8 +10,8 @@ final class OpenSnapAppModel: ObservableObject {
     }
 
     private func startGlobalHotkeys() {
-        let service = GlobalHotkeyService { [weak self] result in
-            self?.handleGlobalHotkeyResult(result)
+        let service = GlobalHotkeyService { [weak self] command, result in
+            self?.handleGlobalHotkeyResult(command: command, result: result)
         }
 
         service.start()
@@ -22,7 +23,16 @@ final class OpenSnapAppModel: ObservableObject {
         #endif
     }
 
-    private func handleGlobalHotkeyResult(_ result: Result<WindowMutationResult, Error>) {
+    private func handleGlobalHotkeyResult(
+        command: ShortcutCommand,
+        result: Result<WindowMutationResult, Error>
+    ) {
+        #if DEBUG || BETA
+        if case let .layout(layoutCommand) = command {
+            OpenSnapInspector.shared.recordShortcut(layoutCommand)
+        }
+        #endif
+
         switch result {
         case let .success(mutationResult):
             #if DEBUG || BETA

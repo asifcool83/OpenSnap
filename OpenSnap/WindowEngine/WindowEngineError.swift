@@ -5,13 +5,11 @@ import OpenSnapCore
 public enum WindowEngineError: LocalizedError, Sendable {
     case accessibilityPermissionRequired
     case frontmostApplicationUnavailable
-    case focusedWindowUnavailable
     case screenUnavailable
     case invalidWindowFrame(WindowFrame)
     case invalidAccessibilityValue
     case accessibilityReadFailed(attribute: String, code: Int)
     case accessibilityWriteFailed(attribute: String, code: Int)
-    case unableToSetWindowFrame
 
     public var errorDescription: String? {
         switch self {
@@ -19,8 +17,6 @@ public enum WindowEngineError: LocalizedError, Sendable {
             return "OpenSnap needs Accessibility permission before it can move windows."
         case .frontmostApplicationUnavailable:
             return "OpenSnap could not determine the frontmost application."
-        case .focusedWindowUnavailable:
-            return "OpenSnap could not find the focused window."
         case .screenUnavailable:
             return "OpenSnap could not determine the current screen."
         case .invalidWindowFrame:
@@ -31,8 +27,6 @@ public enum WindowEngineError: LocalizedError, Sendable {
             return "OpenSnap could not read \(attribute) from Accessibility. AXError \(code)."
         case let .accessibilityWriteFailed(attribute, code):
             return "OpenSnap could not write \(attribute) through Accessibility. AXError \(code)."
-        case .unableToSetWindowFrame:
-            return "OpenSnap could not move or resize the focused window."
         }
     }
 }

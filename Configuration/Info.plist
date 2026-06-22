@@ -26,19 +26,9 @@
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
-    <key>OpenSnapBuildDate</key>
-    <string>$(OPEN_SNAP_BUILD_DATE)</string>
     <key>OpenSnapGitBranch</key>
     <string>$(OPEN_SNAP_GIT_BRANCH)</string>
-	<key>OpenSnapGitCommit</key>
-	<string>$(OPEN_SNAP_GIT_COMMIT)</string>
-	<key>SUEnableAutomaticChecks</key>
-	<true/>
-	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/asifcool83/OpenSnap/main/Updates/appcast.xml</string>
-	<key>SUPublicEDKey</key>
-	<string>ypHCzu8uoo0NV17brUObGrsK2XOgCeYE1+tkdJ5/zV8=</string>
-	<key>SUShowReleaseNotes</key>
-	<true/>
+    <key>OpenSnapGitCommit</key>
+    <string>$(OPEN_SNAP_GIT_COMMIT)</string>
 </dict>
 </plist>

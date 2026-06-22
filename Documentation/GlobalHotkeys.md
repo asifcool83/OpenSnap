@@ -13,7 +13,7 @@ The shortcuts are active while OpenSnap is running and do not require focus. The
 
 `MouseWindowResolver` performs one Accessibility hit-test at the current cursor location, walks from the hit element to its window ancestor, and verifies that the window's position and size attributes are settable. It does not poll or track the cursor.
 
-The service reads the resolved window frame, selects its visible screen through `ScreenFrameResolver`, and obtains the requested frame from `LayoutCalculator`. The already-acquired window and requested frame are passed directly to `WindowMutationPipeline`.
+The service reads the resolved window frame, converts AppKit visible-screen frames into Accessibility coordinates, selects the matching screen through `ScreenFrameResolver`, and obtains the requested frame from `LayoutCalculator`. The already-acquired window and requested frame are passed directly to `WindowMutationPipeline`.
 
 The pipeline's existing typed result is returned unchanged:
 
@@ -22,3 +22,5 @@ The pipeline's existing typed result is returned unchanged:
 - `failure` when validation, resize, positioning, or read-back fails.
 
 Window-resolution and screen-selection errors occur before mutation and remain thrown errors, matching the existing window-engine boundary.
+
+If macOS cannot provide the current cursor location, dispatch fails before hit-testing instead of silently targeting the top-left corner of the desktop.

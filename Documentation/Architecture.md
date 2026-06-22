@@ -18,7 +18,7 @@ Menu actions flow through `MenuBarController`, which delegates status and report
 
 ## Accessibility
 
-The accessibility layer checks and requests macOS Accessibility permission. No window layout decisions live here.
+The accessibility layer checks macOS Accessibility permission. No window layout decisions live here.
 
 System permission checks, focused-window access, and mouse-window access are exposed through injected protocols. The production adapters own `AXUIElement` creation, attribute conversion, hit-testing, and raw Accessibility reads and writes; orchestration depends only on app-level window geometry and operations. This boundary keeps Accessibility behavior mockable without leaking platform types into `OpenSnapCore`.
 
@@ -34,7 +34,7 @@ Focused-window selection follows the deterministic policy in [Focused Window Acq
 
 Frame changes pass through the [Window Mutation Pipeline](WindowMutationPipeline.md), which applies and verifies a requested frame against the same acquired window.
 
-Monitor selection is platform-independent. `OpenSnapCore` chooses the screen with the largest overlap with the current window, falling back to the nearest screen when a stale window frame no longer intersects any display.
+Monitor selection is platform-independent. The AppKit screen adapter first converts bottom-left-origin `NSScreen` frames into the top-left-origin coordinate space used by Accessibility. `OpenSnapCore` then chooses the screen with the largest overlap with the current window, falling back to the nearest screen when a stale window frame no longer intersects any display.
 
 ## LayoutEngine
 
@@ -50,16 +50,12 @@ The core shortcut engine defines semantic shortcut commands. The app shortcut en
 
 Settings and preference persistence are intentionally deferred to v0.7.0-beta. M1.7 has no preferences or onboarding.
 
-## Utilities
+## Build Identity and Distribution
 
-Shared, dependency-free helpers live here.
+`BuildInfo` is the single runtime source for app version, build number, optional source revision metadata, and system identity. CI injects the workflow run number and checked-out source revision into the optimized Beta artifact and verifies both before packaging.
 
-## Build Identity and Updates
+Automatic updating is not linked into the app. It remains deferred until the signed and notarized release process is defined; distribution constraints are documented in [`Updates/README.md`](../Updates/README.md).
 
-`BuildInfo` is the single runtime source for app version, build number, optional source revision metadata, and system identity. The native app target owns Sparkle because update delivery is a distribution concern, not core or package behavior.
+## Diagnostics
 
-Sparkle checks the repository-hosted appcast and downloads signed archives from GitHub Releases. Publishing conventions are documented in [`Updates/README.md`](../Updates/README.md).
-
-## Inspector
-
-Structured diagnostic state lives in the app target and remains local. `OpenSnapDiagnosticsService` reuses the existing Inspector snapshot and report formatter to produce the menu bar's plain-text clipboard report. M1.7 exposes no Inspector window.
+Structured diagnostic state lives in the app target and remains local. `OpenSnapDiagnosticsService` reuses that state and the report formatter to produce the menu bar's plain-text clipboard report. There is no diagnostics window, background export, network transfer, or polling.

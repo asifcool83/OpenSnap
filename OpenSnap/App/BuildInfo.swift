@@ -9,7 +9,6 @@ struct BuildInfo: Equatable, Sendable {
         static let build = "CFBundleVersion"
         static let gitCommit = "OpenSnapGitCommit"
         static let gitBranch = "OpenSnapGitBranch"
-        static let buildDate = "OpenSnapBuildDate"
     }
 
     let appName: String
@@ -17,7 +16,6 @@ struct BuildInfo: Equatable, Sendable {
     let buildNumber: String
     let gitCommit: String?
     let branch: String?
-    let buildDate: String?
     let macOSVersion: String
     let cpuArchitecture: String
 
@@ -41,7 +39,6 @@ struct BuildInfo: Equatable, Sendable {
         buildNumber = Self.string(for: Key.build, in: infoDictionary) ?? "Unavailable"
         gitCommit = Self.string(for: Key.gitCommit, in: infoDictionary)
         branch = Self.string(for: Key.gitBranch, in: infoDictionary)
-        buildDate = Self.string(for: Key.buildDate, in: infoDictionary)
         self.macOSVersion = macOSVersion
         self.cpuArchitecture = cpuArchitecture
     }

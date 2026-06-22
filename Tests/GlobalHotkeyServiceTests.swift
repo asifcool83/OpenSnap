@@ -110,21 +110,44 @@ struct GlobalHotkeyServiceTests {
     @Test func monitorDispatchReportsTypedResult() throws {
         let monitor = HotkeyMonitor()
         let window = HotkeyWindow()
+        var receivedCommand: ShortcutCommand?
         var receivedResult: Result<WindowMutationResult, Error>?
-        let service = makeService(window: window, monitor: monitor) { receivedResult = $0 }
+        let service = makeService(window: window, monitor: monitor) { command, result in
+            receivedCommand = command
+            receivedResult = result
+        }
 
         service.start()
         monitor.send(.layout(.leftSixty))
 
         #expect(service.isRunning)
+        #expect(receivedCommand == .layout(.leftSixty))
         #expect(try receivedResult?.get() == success(for: WindowFrame(x: 0, y: 25, width: 720, height: 775)))
+    }
+
+    @Test func monitorDispatchPreservesCommandWhenDispatchFails() {
+        let monitor = HotkeyMonitor()
+        var receivedCommand: ShortcutCommand?
+        var receivedError: Error?
+        let service = makeService(window: HotkeyWindow(), monitor: monitor) { command, result in
+            receivedCommand = command
+            if case let .failure(error) = result {
+                receivedError = error
+            }
+        }
+
+        service.start()
+        monitor.send(.layout(.maximize))
+
+        #expect(receivedCommand == .layout(.maximize))
+        #expect(receivedError as? GlobalHotkeyError == .unsupportedCommand)
     }
 
     private func makeService(
         window: HotkeyWindow,
         frames: [WindowFrame]? = nil,
         monitor: HotkeyMonitor = HotkeyMonitor(),
-        resultHandler: @escaping GlobalHotkeyService.ResultHandler = { _ in }
+        resultHandler: @escaping GlobalHotkeyService.ResultHandler = { _, _ in }
     ) -> GlobalHotkeyService {
         makeService(
             resolver: HotkeyMouseResolver(window: window),
@@ -138,7 +161,7 @@ struct GlobalHotkeyServiceTests {
         resolver: HotkeyMouseResolver,
         frames: [WindowFrame]? = nil,
         monitor: HotkeyMonitor = HotkeyMonitor(),
-        resultHandler: @escaping GlobalHotkeyService.ResultHandler = { _ in }
+        resultHandler: @escaping GlobalHotkeyService.ResultHandler = { _, _ in }
     ) -> GlobalHotkeyService {
         GlobalHotkeyService(
             mouseWindowResolver: resolver,

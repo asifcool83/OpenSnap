@@ -17,4 +17,4 @@ Each event has a timestamp, severity, category, and message. Each report has a u
 
 ## Multi-Monitor Debugging
 
-When debugging display issues, compare the current, target, and actual frames in the copied report. OpenSnap chooses the screen with the largest overlap with the focused window, falling back to the nearest screen if the saved window frame no longer intersects any display.
+When debugging display issues, compare the current, target, and actual frames in the copied report. OpenSnap chooses the screen with the largest overlap with the target window, falling back to the nearest screen if the window frame no longer intersects any display.

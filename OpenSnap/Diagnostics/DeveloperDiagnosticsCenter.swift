@@ -99,7 +99,7 @@ final class OpenSnapInspector: ObservableObject {
     }
 
     func recordAccessibilityMissing(recordEvent: Bool = true) {
-        let explanation = "Accessibility permission is required to inspect the active window."
+        let explanation = "Accessibility permission is required to inspect windows."
         snapshot.accessibilityStatus = "Permission required"
         snapshot.targetApplication = explanation
         snapshot.windowTitle = explanation

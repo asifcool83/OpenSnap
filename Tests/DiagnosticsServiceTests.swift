@@ -33,7 +33,7 @@ struct DiagnosticsServiceTests {
 
         let report = service.diagnosticReport()
 
-        #expect(report.hasPrefix("OPEN SNAP — DIAGNOSTIC REPORT"))
+        #expect(report.hasPrefix("OPENSNAP — DIAGNOSTIC REPORT"))
         #expect(report.contains("Version: 1.7.0"))
         #expect(report.contains("Build: 107"))
         #expect(report.contains("Git commit: abc1234"))
@@ -78,7 +78,4 @@ private final class MenuPermissionProvider: AccessibilityPermissionProviding {
         self.isTrusted = isTrusted
     }
 
-    func requestIfNeeded() -> Bool {
-        isTrusted
-    }
 }

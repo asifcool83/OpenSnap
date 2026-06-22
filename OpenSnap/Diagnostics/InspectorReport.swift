@@ -27,8 +27,8 @@ struct InspectorReport {
 
     var humanReadable: String {
         """
-        OPEN SNAP — DIAGNOSTIC REPORT
-        =============================
+        OPENSNAP — DIAGNOSTIC REPORT
+        ============================
         Report ID: \(reportID.uuidString)
         Generated: \(Self.dateString(generatedAt))
 
@@ -73,40 +73,6 @@ struct InspectorReport {
         """
     }
 
-    var files: [String: Data] {
-        get throws {
-            let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-
-            let report = ReportDocument(
-                reportID: reportID,
-                generatedAt: generatedAt,
-                status: snapshot,
-                events: events
-            )
-            let system = SystemDocument(
-                macOSVersion: buildInfo.macOSVersion,
-                cpuArchitecture: buildInfo.cpuArchitecture
-            )
-            let version = VersionDocument(
-                appName: buildInfo.appName,
-                version: buildInfo.version,
-                buildNumber: buildInfo.buildNumber,
-                gitCommit: buildInfo.gitCommit,
-                branch: buildInfo.branch,
-                buildDate: buildInfo.buildDate
-            )
-
-            return [
-                "report.json": try encoder.encode(report),
-                "logs.txt": Data(logsText.utf8),
-                "system.json": try encoder.encode(system),
-                "version.json": try encoder.encode(version)
-            ]
-        }
-    }
-
     private var logsText: String {
         guard !events.isEmpty else { return "No diagnostic events recorded." }
         return events.map {
@@ -114,49 +80,4 @@ struct InspectorReport {
             return "\(Self.dateString($0.timestamp)) [\($0.severity.rawValue)] [\($0.category.rawValue)] \($0.message)\(repetition)"
         }.joined(separator: "\n")
     }
-}
-
-enum InspectorReportExporter {
-    static func export(_ report: InspectorReport, to destination: URL) throws {
-        let fileManager = FileManager.default
-        let directory = fileManager.temporaryDirectory
-            .appendingPathComponent("OpenSnap-Report-\(report.reportID.uuidString)", isDirectory: true)
-        defer { try? fileManager.removeItem(at: directory) }
-
-        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-        for (name, data) in try report.files {
-            try data.write(to: directory.appendingPathComponent(name), options: .atomic)
-        }
-
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/ditto")
-        process.arguments = ["-c", "-k", "--norsrc", directory.path, destination.path]
-        try process.run()
-        process.waitUntilExit()
-
-        guard process.terminationStatus == 0 else {
-            throw CocoaError(.fileWriteUnknown)
-        }
-    }
-}
-
-private struct ReportDocument: Codable {
-    let reportID: UUID
-    let generatedAt: Date
-    let status: InspectorSnapshot
-    let events: [InspectorEvent]
-}
-
-private struct SystemDocument: Codable {
-    let macOSVersion: String
-    let cpuArchitecture: String
-}
-
-private struct VersionDocument: Codable {
-    let appName: String
-    let version: String
-    let buildNumber: String
-    let gitCommit: String?
-    let branch: String?
-    let buildDate: String?
 }

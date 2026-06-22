@@ -59,8 +59,8 @@ struct InspectorTests {
         #expect(inspector.snapshot.currentFrame.contains("Accessibility permission"))
     }
 
-    @Test("Report contains the required support files and BuildInfo identity")
-    func reportFiles() throws {
+    @Test("Plain-text report contains BuildInfo identity and diagnostics")
+    func plainTextReport() {
         let snapshot = InspectorSnapshot(appVersion: "1.2.3", buildNumber: "42")
         let event = InspectorEvent(
             timestamp: Date(timeIntervalSince1970: 1_700_000_000),
@@ -76,51 +76,10 @@ struct InspectorTests {
             events: [event]
         )
 
-        #expect(Set(try report.files.keys) == ["report.json", "logs.txt", "system.json", "version.json"])
         #expect(report.humanReadable.contains("Version: 1.2.3"))
-        #expect(report.humanReadable.hasPrefix("OPEN SNAP — DIAGNOSTIC REPORT"))
+        #expect(report.humanReadable.hasPrefix("OPENSNAP — DIAGNOSTIC REPORT"))
+        #expect(report.humanReadable.contains("Git commit: abc123"))
+        #expect(report.humanReadable.contains("Build: 42"))
         #expect(report.humanReadable.contains("Window constrained"))
-
-        let version = String(decoding: try #require(report.files["version.json"]), as: UTF8.self)
-        #expect(version.contains("abc123"))
-        #expect(version.contains("42"))
-    }
-
-    @Test("Detects whether an appcast contains a release")
-    func updateFeedInspection() {
-        let emptyFeed = Data("<rss><channel></channel></rss>".utf8)
-        let unrelatedElement = Data("<rss><channel><items /></channel></rss>".utf8)
-        let publishedFeed = Data("<rss><channel><item><title>Beta</title></item></channel></rss>".utf8)
-
-        #expect(!UpdateFeedInspector.containsRelease(in: emptyFeed))
-        #expect(!UpdateFeedInspector.containsRelease(in: unrelatedElement))
-        #expect(UpdateFeedInspector.containsRelease(in: publishedFeed))
-    }
-
-    @Test("Exported ZIP contains all support files")
-    func exportedZipContents() throws {
-        let report = InspectorReport(
-            buildInfo: buildInfo,
-            snapshot: InspectorSnapshot(appVersion: "1.2.3", buildNumber: "42"),
-            events: []
-        )
-        let destination = FileManager.default.temporaryDirectory
-            .appendingPathComponent("OpenSnap-InspectorTests-\(UUID().uuidString).zip")
-        defer { try? FileManager.default.removeItem(at: destination) }
-
-        try InspectorReportExporter.export(report, to: destination)
-
-        let process = Process()
-        let output = Pipe()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/unzip")
-        process.arguments = ["-Z1", destination.path]
-        process.standardOutput = output
-        try process.run()
-        process.waitUntilExit()
-
-        #expect(process.terminationStatus == 0)
-        let listing = String(decoding: output.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
-        let files = Set(listing.split(separator: "\n").map(String.init))
-        #expect(files == ["report.json", "logs.txt", "system.json", "version.json"])
     }
 }

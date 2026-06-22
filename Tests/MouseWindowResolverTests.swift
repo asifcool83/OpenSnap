@@ -5,6 +5,14 @@ import Testing
 
 @MainActor
 struct MouseWindowResolverTests {
+    @Test func unavailableCursorLocationStopsBeforeHitTesting() {
+        let reader = AXMouseWindowTargetReader(cursorLocation: { nil })
+
+        #expect(throws: MouseWindowResolutionError.cursorLocationUnavailable) {
+            _ = try reader.windowUnderMouse()
+        }
+    }
+
     @Test func returnsValidatedWindowAfterCheckingBothCapabilities() throws {
         let window = CapabilityWindow()
         let resolver = MouseWindowResolver(targetReader: MouseTargetReader(window: window))

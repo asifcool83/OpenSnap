@@ -208,10 +208,6 @@ struct AccessibilityWindowControllerTests {
 
 private struct PermissionProvider: AccessibilityPermissionProviding {
     let isTrusted: Bool
-
-    func requestIfNeeded() -> Bool {
-        isTrusted
-    }
 }
 
 private final class FrontmostApplicationProvider: FrontmostApplicationProviding {

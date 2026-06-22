@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-  <channel>
-    <title>OpenSnap Beta Updates</title>
-    <link>https://raw.githubusercontent.com/asifcool83/OpenSnap/main/Updates/appcast.xml</link>
-    <description>OpenSnap beta release updates.</description>
-    <language>en</language>
-  </channel>
-</rss>

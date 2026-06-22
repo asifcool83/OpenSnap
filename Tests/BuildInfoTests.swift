@@ -9,8 +9,7 @@ struct BuildInfoTests {
                 "CFBundleShortVersionString": "0.2.0-beta.1",
                 "CFBundleVersion": "42",
                 "OpenSnapGitCommit": "abc1234",
-                "OpenSnapGitBranch": "feature/beta",
-                "OpenSnapBuildDate": "2026-06-19T08:00:00Z"
+                "OpenSnapGitBranch": "feature/beta"
             ],
             macOSVersion: "Version 15.5 (Build 24F74)",
             cpuArchitecture: "arm64"
@@ -21,7 +20,6 @@ struct BuildInfoTests {
         #expect(buildInfo.buildNumber == "42")
         #expect(buildInfo.gitCommit == "abc1234")
         #expect(buildInfo.branch == "feature/beta")
-        #expect(buildInfo.buildDate == "2026-06-19T08:00:00Z")
         #expect(buildInfo.macOSVersion == "Version 15.5 (Build 24F74)")
         #expect(buildInfo.cpuArchitecture == "arm64")
         #expect(buildInfo.versionAndBuild == "0.2.0-beta.1 (42)")
@@ -32,8 +30,7 @@ struct BuildInfoTests {
             infoDictionary: [
                 "CFBundleName": "OpenSnap",
                 "OpenSnapGitCommit": "$(OPEN_SNAP_GIT_COMMIT)",
-                "OpenSnapGitBranch": " ",
-                "OpenSnapBuildDate": ""
+                "OpenSnapGitBranch": " "
             ],
             macOSVersion: "macOS",
             cpuArchitecture: "x86_64"
@@ -44,6 +41,5 @@ struct BuildInfoTests {
         #expect(buildInfo.buildNumber == "Unavailable")
         #expect(buildInfo.gitCommit == nil)
         #expect(buildInfo.branch == nil)
-        #expect(buildInfo.buildDate == nil)
     }
 }

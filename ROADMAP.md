@@ -9,6 +9,8 @@
 - OpenSnap Inspector foundation
 - Global hotkeys for the 60% / 40% split
 - Native menu bar app and local diagnostic report
+- Release-readiness engineering audit
+- Reproducible optimized CI artifact with source identity
 - Design System v1
 - Repository governance
 
@@ -51,6 +53,7 @@
 - Signing
 - Notarization
 - Release automation
+- Automatic-update delivery decision and implementation
 
 ## v0.9.0-beta
 
