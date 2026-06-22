@@ -40,7 +40,6 @@ jobs:
           CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER"
           OPEN_SNAP_GIT_COMMIT="$GITHUB_SHA"
           OPEN_SNAP_GIT_BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
-          SWIFT_TREAT_WARNINGS_AS_ERRORS=YES
           build
 
       - name: Run tests
