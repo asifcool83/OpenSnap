@@ -43,3 +43,7 @@ The artifact is currently unsigned. The workflow keeps verification, packaging, 
 ## Release Readiness
 
 The M1.9 engineering audit is recorded in [`Documentation/ReleaseReadiness.md`](Documentation/ReleaseReadiness.md). The source and CI artifact are suitable for controlled testing, but a public beta remains gated on signing, notarization, release automation, and documented manual application/monitor QA.
+
+## First User Experience
+
+M2.0 adds a native, local first-run journey from launch to the first successful snap. OpenSnap explains why Accessibility and Input Monitoring are needed, requests them only after an explicit click, provides direct recovery links, teaches both fixed shortcuts, and keeps the same information available in its menu and focused Settings window. The interaction and privacy decisions are documented in [`Documentation/FirstUserExperience.md`](Documentation/FirstUserExperience.md).

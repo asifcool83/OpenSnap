@@ -4,8 +4,13 @@ import OpenSnapCore
 @MainActor
 final class OpenSnapAppModel: ObservableObject {
     private var globalHotkeyService: GlobalHotkeyService?
+    private let inputMonitoringPermissionProvider: any InputMonitoringPermissionProviding
 
-    init() {
+    init(
+        inputMonitoringPermissionProvider: any InputMonitoringPermissionProviding
+            = SystemInputMonitoringPermissionProvider()
+    ) {
+        self.inputMonitoringPermissionProvider = inputMonitoringPermissionProvider
         startGlobalHotkeys()
     }
 
@@ -18,7 +23,11 @@ final class OpenSnapAppModel: ObservableObject {
         globalHotkeyService = service
         #if DEBUG || BETA
         OpenSnapInspector.shared.update { snapshot in
-            snapshot.keyboardHookStatus = service.isRunning ? "Active" : "Unavailable"
+            if !inputMonitoringPermissionProvider.isTrusted {
+                snapshot.keyboardHookStatus = "Input Monitoring permission required"
+            } else {
+                snapshot.keyboardHookStatus = service.isRunning ? "Active" : "Unavailable"
+            }
         }
         #endif
     }

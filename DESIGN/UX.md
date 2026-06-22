@@ -29,3 +29,15 @@ Window changes should feel immediate. Feedback should be visible only when it he
 ## Accessibility
 
 OpenSnap should support keyboard navigation, VoiceOver where practical, sufficient contrast, and clear permission guidance.
+
+## First Run
+
+The first launch should answer three questions in one compact window:
+
+1. What does OpenSnap do?
+2. Why does macOS require these permissions?
+3. What keys produce the first result?
+
+Permission requests must follow explicit user actions. A denied or revoked permission must always have a visible recovery route. Onboarding completion may be remembered locally, but permission truth must always come from macOS.
+
+The moved window is the normal success feedback. OpenSnap should reserve additional messaging for setup state, constraints, and failures where guidance helps the user recover.

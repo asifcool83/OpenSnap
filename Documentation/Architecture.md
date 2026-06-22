@@ -6,15 +6,17 @@ OpenSnap keeps window management behavior split into small, testable areas.
 
 `OpenSnapCore` contains pure logic and app-independent service models. It must not import SwiftUI, AppKit, or Accessibility frameworks.
 
-`OpenSnap` contains the executable app, SwiftUI views, AppKit integration, Accessibility API integration, and other macOS wiring. It depends on `OpenSnapCore`.
+`OpenSnap` contains the executable app, SwiftUI views, AppKit integration, permission adapters, Accessibility API integration, and other macOS wiring. It depends on `OpenSnapCore`.
 
 `OpenSnap.xcodeproj` owns the native macOS application target used for development, beta distribution, and releases. The Swift package remains the source layout and test harness; it is not the distribution artifact.
 
 ## App
 
-The app layer owns lifecycle and service wiring. `OpenSnapApp` exposes one native `MenuBarExtra` scene and starts background services; it defines no main window or Settings scene.
+The app layer owns lifecycle and service wiring. `OpenSnapApp` exposes a native `MenuBarExtra`, a first-run welcome window, and a focused Settings scene. The welcome window is presented until onboarding is completed; it is not a permanent main window.
 
-Menu actions flow through `MenuBarController`, which delegates status and report content to `OpenSnapDiagnosticsService`. Clipboard, native About-panel, and application-termination adapters are injected at the controller boundary. No window layout or snapping decisions live in the menu layer. See [Menu Bar App](MenuBarApp.md).
+Menu actions flow through `MenuBarController`, which delegates permission readiness, last-action recovery copy, and report content to `OpenSnapDiagnosticsService`. Clipboard, native About-panel, and application-termination adapters are injected at the controller boundary. No window layout or snapping decisions live in the menu layer. See [Menu Bar App](MenuBarApp.md).
+
+`PermissionController` provides shared observable state to onboarding and Settings. `SystemPermissionService` separates passive status reads, explicit permission requests, and System Settings recovery links so opening a menu or window never triggers a system prompt. `FirstRunState` persists only whether onboarding was completed.
 
 ## Accessibility
 
@@ -48,7 +50,7 @@ The core shortcut engine defines semantic shortcut commands. The app shortcut en
 
 ## Settings
 
-Settings and preference persistence are intentionally deferred to v0.7.0-beta. M1.7 has no preferences or onboarding.
+M2.0 Settings is intentionally focused: it contains permission status and recovery plus the two fixed shortcut definitions. Shortcut editing and general preference persistence remain deferred.
 
 ## Build Identity and Distribution
 

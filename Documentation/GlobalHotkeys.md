@@ -5,7 +5,7 @@ M1.6 provides two fixed global shortcuts:
 - Shift+1 snaps the window under the mouse to the left 60% of its screen.
 - Shift+2 snaps the window under the mouse to the right 40% of its screen.
 
-The shortcuts are active while OpenSnap is running and do not require focus. They have no settings or persistence in this milestone.
+The shortcuts are active while OpenSnap is running, do not require focus, and require macOS Input Monitoring permission. M2.0 presents them in onboarding, the menu, and Settings. They remain fixed and have no shortcut preference persistence.
 
 ## Dispatch Path
 

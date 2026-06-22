@@ -65,3 +65,11 @@ Status: Accepted
 OpenSnap Inspector and its advanced diagnostics ship in Beta builds to support external testers. Production Release builds may later reduce or disable advanced diagnostics.
 
 Reason: Beta feedback is actionable only when testers can provide enough context to reproduce and diagnose failures without telemetry.
+
+## ADR-0009: Permission Prompts Require Explicit User Action
+
+Status: Accepted
+
+OpenSnap may read Accessibility and Input Monitoring status passively, but it requests either permission only after the user chooses the corresponding **Allow** action. Onboarding and Settings share one injected permission-service boundary, and direct System Settings links remain available for denial or revocation recovery.
+
+Reason: System permission prompts are understandable only when they immediately follow a clear explanation and an intentional user action. Separating status, request, and recovery behavior also keeps menus side-effect free and testable.
